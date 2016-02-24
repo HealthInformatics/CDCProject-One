@@ -4,4 +4,8 @@
     <string name="upload_image">Upload Imgae</string>
     <string name="user_image">User image</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_map">MapActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 </resources>
