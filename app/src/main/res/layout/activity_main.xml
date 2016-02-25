@@ -19,6 +19,12 @@
         android:paddingRight="24dp"
         android:onClick="start_upload_image"
         />
+    <Button
+        android:id="@+id/searchMapBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Search nearby recreation facilities."/>
 
 </LinearLayout>
 
