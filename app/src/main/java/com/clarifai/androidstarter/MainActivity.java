@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.clarifai.androidstarter.constants.RequestCodes;
 import com.clarifai.androidstarter.map.LocationHelper;
+import com.google.android.gms.plus.PlusShare;
 
 
 //This is the main activity.
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button selectButton;
     private Button searchMapBtn;
+    private Button shareButton;
 
 
     @Override
@@ -33,7 +35,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         selectButton = (Button) findViewById(R.id.upload_image);
         searchMapBtn = (Button) findViewById(R.id.searchMapBtn);
+        shareButton = (Button) findViewById(R.id.shareButton);
         searchMapBtn.setOnClickListener(this);
+        shareButton.setOnClickListener(this);
     }
 
     @Override
@@ -42,6 +46,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.searchMapBtn:
                 LocationHelper helper = new LocationHelper(this);
                 startGoogleMap(helper.getCurrentLocation(), "recreation");
+                break;
+            case R.id.shareButton:
+                PlusShare.Builder builder = new PlusShare.Builder(this);
+
+                // Set call-to-action metadata.
+                builder.addCallToAction(
+                        "CREATE_ITEM", /** call-to-action button label */
+                        Uri.parse("http://plus.google.com/pages/create"), /** call-to-action url (for desktop use) */
+                        "/pages/create" /** call to action deep-link ID (for mobile use), 512 characters or fewer */);
+
+                // Set the content url (for desktop use).
+                builder.setContentUrl(Uri.parse("https://plus.google.com/pages/"));
+
+                // Set the target deep-link ID (for mobile use).
+                builder.setContentDeepLinkId("/pages/",
+                        null, null, null);
+
+                // Set the share text.
+                builder.setText("Create your Google+ Page too!" +
+                        "<https://github.com/Peleus1992/Lost_and_Found_Android_app/blob/master/screenshot/Screenshot_1.png>");
+                startActivityForResult(builder.getIntent(), 0);
                 break;
         }
     }
@@ -63,33 +88,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         Intent intent = new Intent(this, RecognitionActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case RequestCodes.PERMISSION_ACCESS_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    LocationHelper helper = new LocationHelper(this);
-                    startGoogleMap(helper.getCurrentLocation(), "recreation");
-                    break;
-
-                } else {
-                    Log.i(TAG, "User declined the permission.");
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
     }
 }

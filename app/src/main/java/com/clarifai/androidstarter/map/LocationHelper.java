@@ -27,24 +27,6 @@ public class LocationHelper {
     public Location getCurrentLocation() {
         // Getting LocationManager object from System Service LOCATION_SERVICE
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
-        // Request permission
-        if (Build.VERSION.SDK_INT >= 23
-                && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            // No explanation needed, we can request the permission.
-
-            ActivityCompat.requestPermissions((AppCompatActivity)context,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
-                            , Manifest.permission.ACCESS_FINE_LOCATION},
-                    RequestCodes.PERMISSION_ACCESS_LOCATION);
-
-            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-            // app-defined int constant. The callback method gets the
-            // result of the request.
-        }
-
         // get location from network provider or gps provider
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if(location == null) {
