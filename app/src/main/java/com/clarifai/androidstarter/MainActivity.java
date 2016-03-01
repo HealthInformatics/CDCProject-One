@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 {
     public static final String TAG = MainActivity.class.getName();
 
-    private Button selectButton;
+    private Button selectButton;//for image recognition
     private Button searchMapBtn;
     private Button shareButton;
 
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        selectButton = (Button) findViewById(R.id.upload_image);
+        selectButton = (Button) findViewById(R.id.upload_image);//for upload images from gallery
         searchMapBtn = (Button) findViewById(R.id.searchMapBtn);
         shareButton = (Button) findViewById(R.id.shareButton);
         searchMapBtn.setOnClickListener(this);
@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(mapIntent);
     }
 
-    public void start_upload_image(View view)
+    public void start_upload_image(View view)//start the recognition activity
     {
-        Intent intent = new Intent(this, RecognitionActivity.class);
-        startActivity(intent);
+        Intent recognition_intent = new Intent(this, RecognitionActivity.class);
+        startActivity(recognition_intent);
     }
 }

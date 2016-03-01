@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,10 +31,12 @@ public class RecognitionActivity extends Activity {
   private static final String TAG = RecognitionActivity.class.getSimpleName();
 
   private static final int CODE_PICK = 1111;
+  private static final int CODE_CAM=1112;
 
   private final ClarifaiClient client = new ClarifaiClient(Credentials.CLIENT_ID,
       Credentials.CLIENT_SECRET);
   private Button selectButton;
+  private Button cameraButton;
   private ImageView imageView;
   private TextView textView;
 
@@ -44,6 +47,7 @@ public class RecognitionActivity extends Activity {
     imageView = (ImageView) findViewById(R.id.image_view);
     textView = (TextView) findViewById(R.id.text_view);
     selectButton = (Button) findViewById(R.id.select_button);
+    cameraButton=(Button) findViewById(R.id.camera_button);
     selectButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         // Send an intent to launch the media picker.;
@@ -54,12 +58,40 @@ public class RecognitionActivity extends Activity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), CODE_PICK);
       }
     });
+
+    cameraButton.setOnClickListener(
+            new View.OnClickListener()
+            {
+              @Override
+              public void onClick(View v)
+              {
+                Intent cam_intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cam_intent,CODE_CAM);
+              }
+            }
+
+
+
+
+    );
+
+
+
+
     Intent receive_intent=getIntent();
   }
 
+
+
+
+
+
+
+
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
     super.onActivityResult(requestCode, resultCode, intent);
-    if (requestCode == CODE_PICK && resultCode == RESULT_OK) {
+    if (requestCode == CODE_PICK && resultCode == RESULT_OK)
+    {
       // The user picked an image. Send it to Clarifai for recognition.
       Log.d(TAG, "User picked image: " + intent.getData());
       Bitmap bitmap = loadBitmapFromUri(intent.getData());
@@ -79,7 +111,21 @@ public class RecognitionActivity extends Activity {
         }.execute(bitmap);
       } else {
         textView.setText("Unable to load selected image.");
+
       }
+    }
+    else if(requestCode==CODE_CAM&&resultCode==RESULT_OK)
+    {
+      Bitmap bp=(Bitmap) intent.getExtras().get("data");
+      imageView.setImageBitmap(bp);
+      new AsyncTask<Bitmap, Void, RecognitionResult>() {
+        @Override protected RecognitionResult doInBackground(Bitmap... bitmaps) {
+          return recognizeBitmap(bitmaps[0]);
+        }
+        @Override protected void onPostExecute(RecognitionResult result) {
+          updateUIForResult(result);
+        }
+      }.execute(bp);
     }
   }
 

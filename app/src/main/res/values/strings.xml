@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">CDC</string>
     <string name="select_image">Select Image</string>
+    <string name="take_image">Take Pic</string>
     <string name="upload_image">Upload Imgae</string>
     <string name="user_image">User image</string>
     <string name="title_activity_main">MainActivity</string>
