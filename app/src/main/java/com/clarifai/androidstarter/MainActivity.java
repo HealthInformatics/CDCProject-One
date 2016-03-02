@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button selectButton;//for image recognition
     private Button searchMapBtn;
     private Button shareButton;
+    private Button bmiButton;
 
 
     @Override
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         selectButton = (Button) findViewById(R.id.upload_image);//for upload images from gallery
         searchMapBtn = (Button) findViewById(R.id.searchMapBtn);
         shareButton = (Button) findViewById(R.id.shareButton);
+        bmiButton=(Button) findViewById(R.id.BMI);
         searchMapBtn.setOnClickListener(this);
         shareButton.setOnClickListener(this);
     }
@@ -88,5 +90,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         Intent recognition_intent = new Intent(this, RecognitionActivity.class);
         startActivity(recognition_intent);
+    }
+    public void open_BMI(View view)
+    {
+        Intent bmi_intent=new Intent(this,BMI.class);
+        startActivity(bmi_intent);
     }
 }

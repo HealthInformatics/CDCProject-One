@@ -8,6 +8,14 @@
 
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calaulate BMI"
+        android:id="@+id/BMI"
+        android:layout_gravity="center_horizontal"
+        android:onClick="open_BMI"/>
+
+    <Button
         android:id="@+id/upload_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

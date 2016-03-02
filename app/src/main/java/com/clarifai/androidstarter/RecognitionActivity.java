@@ -69,10 +69,6 @@ public class RecognitionActivity extends Activity {
                 startActivityForResult(cam_intent,CODE_CAM);
               }
             }
-
-
-
-
     );
 
 
