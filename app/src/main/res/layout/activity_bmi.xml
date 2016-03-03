@@ -18,7 +18,8 @@
         android:id="@+id/input_weight"
         android:layout_marginTop="52dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:imeOptions="actionNext|actionSend"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -28,7 +29,8 @@
         android:id="@+id/input_height"
         android:layout_below="@+id/input_weight"
         android:layout_alignStart="@+id/input_weight"
-        android:layout_marginTop="70dp" />
+        android:layout_marginTop="70dp"
+        android:imeOptions="actionDone"/>
 
     <TextView
         android:layout_width="wrap_content"
