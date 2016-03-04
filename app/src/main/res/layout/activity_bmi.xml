@@ -72,4 +72,23 @@
         android:layout_marginTop="37dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/weight_spinner"
+        android:layout_alignEnd="@+id/result"
+        android:layout_toEndOf="@+id/input_weight"
+        android:layout_alignBottom="@+id/weight"
+        android:layout_alignStart="@+id/height_spinner" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/height_spinner"
+        android:layout_alignBottom="@+id/height"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/input_height"
+        android:layout_below="@+id/input_weight"
+        android:layout_alignStart="@+id/calculate" />
 </RelativeLayout>
