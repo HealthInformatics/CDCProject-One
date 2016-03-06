@@ -10,9 +10,18 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
+
 
 import com.clarifai.api.ClarifaiClient;
 import com.clarifai.api.RecognitionRequest;
@@ -22,6 +31,7 @@ import com.clarifai.api.exception.ClarifaiException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static android.provider.MediaStore.Images.Media;
 
@@ -39,34 +49,44 @@ public class RecognitionActivity extends Activity {
   private Button cameraButton;
   private ImageView imageView;
   private TextView textView;
+  private TableLayout button_view;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recognition);
 
+
+    button_view=(TableLayout) findViewById(R.id.button_view);
     imageView = (ImageView) findViewById(R.id.image_view);
     textView = (TextView) findViewById(R.id.text_view);
     selectButton = (Button) findViewById(R.id.select_button);
     cameraButton=(Button) findViewById(R.id.camera_button);
-    selectButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        // Send an intent to launch the media picker.;
 
-        final Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), CODE_PICK);
-      }
-    });
+
+
+
+
+
+    selectButton.setOnClickListener(
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                // Send an intent to launch the media picker.;
+
+                final Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), CODE_PICK);
+              }
+            }
+    );
 
     cameraButton.setOnClickListener(
-            new View.OnClickListener()
-            {
+            new View.OnClickListener() {
               @Override
-              public void onClick(View v)
-              {
-                Intent cam_intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cam_intent,CODE_CAM);
+              public void onClick(View v) {
+                Intent cam_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cam_intent, CODE_CAM);
               }
             }
     );
@@ -171,19 +191,41 @@ public class RecognitionActivity extends Activity {
 
   /** Updates the UI by displaying tags for the given result. */
   private void updateUIForResult(RecognitionResult result) {
-    if (result != null) {
-      if (result.getStatusCode() == RecognitionResult.StatusCode.OK) {
-        // Display the list of tags in the UI.
+    if (result != null)
+    {
+      if (result.getStatusCode() == RecognitionResult.StatusCode.OK)
+      {
+        ArrayList<Button> mybutton=new ArrayList<Button>();
         StringBuilder b = new StringBuilder();
+        int i=0;
+        TableRow tr=new TableRow(this);
         for (Tag tag : result.getTags()) {
           b.append(b.length() > 0 ? ", " : "").append(tag.getName());
+          if(i==0)
+          {
+            tr=new TableRow(this);
+          }
+          Button temp_buton = new Button(this);
+          temp_buton.setText(tag.getName());
+          tr.addView(temp_buton);
+          mybutton.add(temp_buton);
+          i++;
+          if(i==3) {
+            button_view.addView(tr);
+            i=0;
+          }
         }
-        textView.setText("Tags:\n" + b);
-      } else {
+
+        textView.setText("Success");
+      }
+      else
+      {
         Log.e(TAG, "Clarifai: " + result.getStatusMessage());
         textView.setText("Sorry, there was an error recognizing your image.");
       }
-    } else {
+    }
+    else
+    {
       textView.setText("Sorry, there was an error recognizing your image.");
     }
     selectButton.setEnabled(true);
