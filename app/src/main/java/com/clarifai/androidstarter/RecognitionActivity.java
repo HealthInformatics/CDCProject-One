@@ -49,9 +49,11 @@ public class RecognitionActivity extends Activity {
       Credentials.CLIENT_SECRET);
   private Button selectButton;
   private Button cameraButton;
+  private Button confirmButton;
   private ImageView imageView;
   private TextView textView;
   private TableLayout button_view;
+
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -63,6 +65,7 @@ public class RecognitionActivity extends Activity {
     textView = (TextView) findViewById(R.id.text_view);
     selectButton = (Button) findViewById(R.id.select_button);
     cameraButton=(Button) findViewById(R.id.camera_button);
+    confirmButton=(Button) findViewById(R.id.confirm_button);
 
 
 
@@ -93,6 +96,15 @@ public class RecognitionActivity extends Activity {
             }
     );
 
+    confirmButton.setOnClickListener(
+            new View.OnClickListener()
+            {
+              public void onClick(View v)
+              {
+                finish();
+              }
+            }
+    );
 
 
 
