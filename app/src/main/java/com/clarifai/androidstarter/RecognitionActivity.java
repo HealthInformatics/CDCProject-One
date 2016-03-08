@@ -207,12 +207,24 @@ public class RecognitionActivity extends Activity {
           {
             tr=new TableRow(this);
           }
-          Button temp_buton = new Button(this);
+          final Button temp_buton = new Button(this);
           temp_buton.setText(tag.getName());
           temp_buton.setTextSize(12);
           Drawable close_icon=getDrawable(drawable.ic_delete);
           close_icon.setBounds(0,0,40,40);
           temp_buton.setCompoundDrawables(null,null,close_icon,null );
+
+          temp_buton.setOnClickListener(
+                  new View.OnClickListener()
+                  {
+                    public void onClick(View v)
+                    {
+                      temp_buton.setVisibility(View.GONE);
+                    }
+                  }
+          );
+
+
           tr.addView(temp_buton);
           mybutton.add(temp_buton);
           i++;
