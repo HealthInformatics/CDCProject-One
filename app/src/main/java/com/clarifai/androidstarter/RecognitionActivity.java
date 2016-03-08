@@ -209,7 +209,7 @@ public class RecognitionActivity extends Activity {
           }
           Button temp_buton = new Button(this);
           temp_buton.setText(tag.getName());
-
+          temp_buton.setTextSize(12);
           Drawable close_icon=getDrawable(drawable.ic_delete);
           close_icon.setBounds(0,0,40,40);
           temp_buton.setCompoundDrawables(null,null,close_icon,null );
