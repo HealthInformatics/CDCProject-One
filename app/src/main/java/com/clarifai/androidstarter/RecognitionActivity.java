@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.R.drawable;
 
 
 import com.clarifai.api.ClarifaiClient;
@@ -207,6 +209,10 @@ public class RecognitionActivity extends Activity {
           }
           Button temp_buton = new Button(this);
           temp_buton.setText(tag.getName());
+
+          Drawable close_icon=getDrawable(drawable.ic_delete);
+          close_icon.setBounds(0,0,40,40);
+          temp_buton.setCompoundDrawables(null,null,close_icon,null );
           tr.addView(temp_buton);
           mybutton.add(temp_buton);
           i++;
