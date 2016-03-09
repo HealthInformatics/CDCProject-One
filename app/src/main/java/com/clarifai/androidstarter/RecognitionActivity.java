@@ -53,6 +53,7 @@ public class RecognitionActivity extends Activity {
   private ImageView imageView;
   private TextView textView;
   private TableLayout button_view;
+  private ArrayList<String> food=new ArrayList<String>();
 
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -210,42 +211,37 @@ public class RecognitionActivity extends Activity {
       if (result.getStatusCode() == RecognitionResult.StatusCode.OK)
       {
         ArrayList<Button> mybutton=new ArrayList<Button>();
-        StringBuilder b = new StringBuilder();
         int i=0;
         TableRow tr=new TableRow(this);
         for (Tag tag : result.getTags()) {
-          b.append(b.length() > 0 ? ", " : "").append(tag.getName());
-          if(i==0)
-          {
-            tr=new TableRow(this);
-          }
-          final Button temp_buton = new Button(this);
-          temp_buton.setText(tag.getName());
-          temp_buton.setTextSize(12);
-          Drawable close_icon=getDrawable(drawable.ic_delete);
-          close_icon.setBounds(0,0,40,40);
-          temp_buton.setCompoundDrawables(null,null,close_icon,null );
-
-          temp_buton.setOnClickListener(
-                  new View.OnClickListener()
-                  {
-                    public void onClick(View v)
-                    {
-                      temp_buton.setVisibility(View.GONE);
+          if (!food.contains(tag.getName())) {
+            food.add(tag.getName());
+            if (i == 0) {
+              tr = new TableRow(this);
+            }
+            final Button temp_buton = new Button(this);
+            temp_buton.setText(tag.getName());
+            temp_buton.setTextSize(12);
+            Drawable close_icon = getDrawable(drawable.ic_delete);
+            close_icon.setBounds(0, 0, 40, 40);
+            temp_buton.setCompoundDrawables(null, null, close_icon, null);
+            temp_buton.setOnClickListener(
+                    new View.OnClickListener() {
+                      public void onClick(View v) {
+                        temp_buton.setVisibility(View.GONE);
+                        food.remove(temp_buton.getText());
+                      }
                     }
-                  }
-          );
-
-
-          tr.addView(temp_buton);
-          mybutton.add(temp_buton);
-          i++;
-          if(i==3) {
-            button_view.addView(tr);
-            i=0;
+            );
+            tr.addView(temp_buton);
+            mybutton.add(temp_buton);
+            i++;
+            if (i == 3) {
+              button_view.addView(tr);
+              i = 0;
+            }
           }
         }
-
         textView.setText("Success");
       }
       else
