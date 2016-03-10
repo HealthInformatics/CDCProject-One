@@ -83,8 +83,6 @@ public class BMI extends Activity
 
                     }
                 }
-
-
         );
 
         weight_spinner.setOnItemSelectedListener(
@@ -101,13 +99,7 @@ public class BMI extends Activity
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
                 }
-
-
         );
-
-
-
-
     }
 
     private void cal_BMI()

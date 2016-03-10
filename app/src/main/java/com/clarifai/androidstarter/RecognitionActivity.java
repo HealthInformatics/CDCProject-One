@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-
 //This is the food identify activity, called by main activity.
 public class RecognitionActivity extends Activity {
   private static final String TAG = RecognitionActivity.class.getSimpleName();
@@ -80,11 +79,6 @@ public class RecognitionActivity extends Activity {
     }.execute("Apple");
 
 
-
-
-
-
-
     selectButton.setOnClickListener(
             new View.OnClickListener() {
               @Override
@@ -123,11 +117,6 @@ public class RecognitionActivity extends Activity {
 
     Intent receive_intent=getIntent();
   }
-
-
-
-
-
 
 
 

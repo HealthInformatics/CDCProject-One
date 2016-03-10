@@ -73,6 +73,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+    public void start_upload_image(View view)//start the recognition activity
+    {
+        Intent recognition_intent = new Intent(this, RecognitionActivity.class);
+        startActivity(recognition_intent);
+    }
+    public void open_BMI(View view)
+    {
+        Intent bmi_intent=new Intent(this,BMI.class);
+        startActivity(bmi_intent);
+    }
+
+
     private void startGoogleMap(Location location, String query) {
         if(location == null) {
             Toast.makeText(this, "Please open your location service.", Toast.LENGTH_SHORT).show();
@@ -85,15 +98,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
     }
-
-    public void start_upload_image(View view)//start the recognition activity
-    {
-        Intent recognition_intent = new Intent(this, RecognitionActivity.class);
-        startActivity(recognition_intent);
-    }
-    public void open_BMI(View view)
-    {
-        Intent bmi_intent=new Intent(this,BMI.class);
-        startActivity(bmi_intent);
-    }
+    
 }
