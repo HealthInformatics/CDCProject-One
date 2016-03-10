@@ -10,4 +10,6 @@ class Credentials {
   // generally a bad practice.
   static final String CLIENT_ID = "xzy0ZSZ0jUY0Q2ExwLW0jkk8g1oF-Pa1xY6AhhCW";
   static final String CLIENT_SECRET = "aESBvcBjFpiYt5W7nKJKxB5hgmce8uHBlXUFrxud";
+  static final String USDA_key="vF66hdnI9EUf8DsBjHIVpmCoFiUIfXUIWKFjTunA";
+
 }

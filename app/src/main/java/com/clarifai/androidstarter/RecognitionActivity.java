@@ -31,11 +31,12 @@ import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
 import com.clarifai.api.exception.ClarifaiException;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static android.provider.MediaStore.Images.Media;
 
 
 //This is the food identify activity, called by main activity.
@@ -55,7 +56,6 @@ public class RecognitionActivity extends Activity {
   private TableLayout button_view;
   private ArrayList<String> food=new ArrayList<String>();
 
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recognition);
@@ -67,6 +67,18 @@ public class RecognitionActivity extends Activity {
     selectButton = (Button) findViewById(R.id.select_button);
     cameraButton=(Button) findViewById(R.id.camera_button);
     confirmButton=(Button) findViewById(R.id.confirm_button);
+
+    final foodQuery food_calories=new foodQuery();
+
+    new AsyncTask<String, Void, String>() {
+      @Override protected String doInBackground(String... url) {
+        return food_calories.search_for_food(url[0]);
+      }
+      @Override protected void onPostExecute(String result) {
+        textView.setText(result);
+      }
+    }.execute("Apple");
+
 
 
 
@@ -242,6 +254,7 @@ public class RecognitionActivity extends Activity {
             }
           }
         }
+
         textView.setText("Success");
       }
       else
