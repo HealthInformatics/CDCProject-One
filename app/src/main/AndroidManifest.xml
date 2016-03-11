@@ -50,6 +50,9 @@
         <activity android:name=".BMI">
 
         </activity>
+        <activity android:name=".LoginActivity">
+
+        </activity>
     </application>
 
 </manifest>

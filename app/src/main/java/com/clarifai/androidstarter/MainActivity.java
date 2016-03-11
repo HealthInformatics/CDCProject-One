@@ -89,6 +89,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(bmi_intent);
     }
 
+    public void open_LogIn(View view)
+    {
+        Intent li_intent=new Intent(this,LoginActivity.class);
+        startActivity(li_intent);
+    }
+
 
     private void startGoogleMap(Location location, String query) {
         if(location == null) {
