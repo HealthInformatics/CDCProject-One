@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button searchMapBtn;
     private Button shareButton;
     private Button bmiButton;
+    private Button testButton;
 
 
     @Override
@@ -38,8 +39,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         searchMapBtn = (Button) findViewById(R.id.searchMapBtn);
         shareButton = (Button) findViewById(R.id.shareButton);
         bmiButton=(Button) findViewById(R.id.BMI);
+        testButton = (Button) findViewById(R.id.testB);
+
         searchMapBtn.setOnClickListener(this);
         shareButton.setOnClickListener(this);
+
     }
 
     @Override
