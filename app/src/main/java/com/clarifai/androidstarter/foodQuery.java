@@ -33,7 +33,6 @@ public class foodQuery
         return create_json(url);
     }
 
-
     public JSONObject create_json(String url)
     {
         JSONObject result=null;
@@ -54,6 +53,8 @@ public class foodQuery
         {
             //result=exception.toString();
         }
+        if(result==null)
+            return result;
         if(result.has("list")||result.has("report"))
             return result;
         else

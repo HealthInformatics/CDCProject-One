@@ -23,6 +23,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.R.drawable;
+import android.util.Pair;
 
 
 import com.clarifai.api.ClarifaiClient;
@@ -37,6 +38,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 
 //This is the food identify activity, called by main activity.
@@ -54,7 +57,9 @@ public class RecognitionActivity extends Activity {
   private ImageView imageView;
   private TextView textView;
   private TableLayout button_view;
-  private ArrayList<String> food=new ArrayList<String>();
+  private Map<String, Pair<String,String>> food = new HashMap<String, Pair<String,String>>();
+  final foodQuery food_calories=new foodQuery();
+
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -68,8 +73,9 @@ public class RecognitionActivity extends Activity {
     cameraButton=(Button) findViewById(R.id.camera_button);
     confirmButton=(Button) findViewById(R.id.confirm_button);
 
-    final foodQuery food_calories=new foodQuery();
 
+
+/*
     new AsyncTask<String, Void, JSONObject>() {
       @Override protected JSONObject doInBackground(String... url) {
         JSONObject food_item= food_calories.search_for_food(url[0]);
@@ -97,6 +103,11 @@ public class RecognitionActivity extends Activity {
         }
       }
     }.execute("Apple");
+*/
+
+
+
+
 
 
     selectButton.setOnClickListener(
@@ -128,7 +139,12 @@ public class RecognitionActivity extends Activity {
             {
               public void onClick(View v)
               {
-                finish();
+                String nutrition="";
+                for(Pair<String,String> value : food.values())
+                {
+                  nutrition=nutrition+value.first+" "+value.second+"\n";
+                }
+                textView.setText(nutrition);
               }
             }
     );
@@ -147,17 +163,47 @@ public class RecognitionActivity extends Activity {
       // The user picked an image. Send it to Clarifai for recognition.
       Log.d(TAG, "User picked image: " + intent.getData());
       Bitmap bitmap = loadBitmapFromUri(intent.getData());
-      if (bitmap != null) {
+      if (bitmap != null)
+      {
         imageView.setImageBitmap(bitmap);
         textView.setText("Recognizing...");
         selectButton.setEnabled(false);
 
         // Run recognition on a background thread since it makes a network call.
-        new AsyncTask<Bitmap, Void, RecognitionResult>() {
-          @Override protected RecognitionResult doInBackground(Bitmap... bitmaps) {
-            return recognizeBitmap(bitmaps[0]);
+        new AsyncTask<Bitmap, Void, RecognitionResult>()
+        {
+          @Override protected RecognitionResult doInBackground(Bitmap... bitmaps)
+          {
+            RecognitionResult result= recognizeBitmap(bitmaps[0]);
+            if (result != null)
+            {
+              if (result.getStatusCode() == RecognitionResult.StatusCode.OK) {
+                for (Tag tag : result.getTags())
+                {
+                  JSONObject food_item= food_calories.search_for_food(tag.getName());
+                  if(food_item!=null)
+                  {
+                    try {
+                      String s = food_item.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno");
+                      if(food.containsKey(s))
+                        continue;
+                      JSONObject nutrition = food_calories.check_calories(s);
+                      if(nutrition!=null)
+                      {
+                        String calory=nutrition.getJSONObject("report").getJSONArray("foods").getJSONObject(0).getJSONArray("nutrients").getJSONObject(0).getString("value");
+                        food.put(s,new Pair<String, String>(tag.getName(),calory));
+                      }
+                    }
+                    catch(Exception e)
+                    {}
+                  }
+                }
+              }
+            }
+            return result;
           }
-          @Override protected void onPostExecute(RecognitionResult result) {
+          @Override protected void onPostExecute(RecognitionResult result)
+          {
             updateUIForResult(result);
           }
         }.execute(bitmap);
@@ -170,9 +216,39 @@ public class RecognitionActivity extends Activity {
     {
       Bitmap bp=(Bitmap) intent.getExtras().get("data");
       imageView.setImageBitmap(bp);
+      textView.setText("Recognizing...");
+      cameraButton.setEnabled(false);
       new AsyncTask<Bitmap, Void, RecognitionResult>() {
         @Override protected RecognitionResult doInBackground(Bitmap... bitmaps) {
-          return recognizeBitmap(bitmaps[0]);
+
+          RecognitionResult result= recognizeBitmap(bitmaps[0]);
+          if (result != null)
+          {
+            if (result.getStatusCode() == RecognitionResult.StatusCode.OK) {
+              for (Tag tag : result.getTags())
+              {
+                JSONObject food_item= food_calories.search_for_food(tag.getName());
+                if(food_item!=null)
+                {
+                  try {
+                    String s = food_item.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno");
+                    if(food.containsKey(s))
+                      continue;
+                    JSONObject nutrition = food_calories.check_calories(s);
+                    if(nutrition!=null)
+                    {
+                      String calory=nutrition.getJSONObject("report").getJSONArray("foods").getJSONObject(0).getJSONArray("nutrients").getJSONObject(0).getString("value");
+                      food.put(s,new Pair<String, String>(tag.getName(),calory));
+                    }
+                  }
+                  catch(Exception e)
+                  {}
+                }
+              }
+            }
+          }
+          return result;
+
         }
         @Override protected void onPostExecute(RecognitionResult result) {
           updateUIForResult(result);
@@ -231,40 +307,42 @@ public class RecognitionActivity extends Activity {
     {
       if (result.getStatusCode() == RecognitionResult.StatusCode.OK)
       {
-        ArrayList<Button> mybutton=new ArrayList<Button>();
-        int i=0;
-        TableRow tr=new TableRow(this);
-        for (Tag tag : result.getTags()) {
-          if (!food.contains(tag.getName())) {
-            food.add(tag.getName());
+        if(food.size()==0)
+          textView.setText("No food");
+        else {
+          ArrayList<Button> mybutton = new ArrayList<Button>();
+          int i = 0;
+          TableRow tr = new TableRow(this);
+          for (final Map.Entry<String, Pair<String, String>> entry : food.entrySet()) {
             if (i == 0) {
               tr = new TableRow(this);
             }
-            final Button temp_buton = new Button(this);
-            temp_buton.setText(tag.getName());
-            temp_buton.setTextSize(12);
+            final Button temp_button = new Button(this);
+            temp_button.setText(entry.getValue().first);
+            temp_button.setTextSize(12);
             Drawable close_icon = getDrawable(drawable.ic_delete);
             close_icon.setBounds(0, 0, 40, 40);
-            temp_buton.setCompoundDrawables(null, null, close_icon, null);
-            temp_buton.setOnClickListener(
+            temp_button.setCompoundDrawables(null, null, close_icon, null);
+            temp_button.setOnClickListener(
                     new View.OnClickListener() {
                       public void onClick(View v) {
-                        temp_buton.setVisibility(View.GONE);
-                        food.remove(temp_buton.getText());
+                        temp_button.setVisibility(View.GONE);
+                        food.remove(entry.getKey());
                       }
                     }
             );
-            tr.addView(temp_buton);
-            mybutton.add(temp_buton);
+            tr.addView(temp_button);
+            mybutton.add(temp_button);
             i++;
             if (i == 3) {
               button_view.addView(tr);
               i = 0;
             }
-          }
-        }
 
-        textView.setText("Success");
+          }
+
+          textView.setText("Success");
+        }
       }
       else
       {
@@ -277,5 +355,7 @@ public class RecognitionActivity extends Activity {
       textView.setText("Sorry, there was an error recognizing your image.");
     }
     selectButton.setEnabled(true);
+    cameraButton.setEnabled(true);
+
   }
 }
