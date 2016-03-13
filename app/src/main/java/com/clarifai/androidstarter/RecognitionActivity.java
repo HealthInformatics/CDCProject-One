@@ -31,6 +31,7 @@ import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
 import com.clarifai.api.exception.ClarifaiException;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -69,12 +70,31 @@ public class RecognitionActivity extends Activity {
 
     final foodQuery food_calories=new foodQuery();
 
-    new AsyncTask<String, Void, String>() {
-      @Override protected String doInBackground(String... url) {
-        return food_calories.search_for_food(url[0]);
+    new AsyncTask<String, Void, JSONObject>() {
+      @Override protected JSONObject doInBackground(String... url) {
+        JSONObject food_item= food_calories.search_for_food(url[0]);
+        JSONObject result=null;
+        if(food_item!=null)
+        {
+          try {
+            String s = food_item.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno");
+            result = food_calories.check_calories(s);
+          }
+          catch(Exception e)
+          {}
+        }
+        return result;
       }
-      @Override protected void onPostExecute(String result) {
-        textView.setText(result);
+      @Override protected void onPostExecute(JSONObject result) {
+        try {
+          if(result!=null) {
+            String s=result.getJSONObject("report").getJSONArray("foods").getJSONObject(0).getJSONArray("nutrients").getJSONObject(0).getString("value");
+            textView.setText(s);
+          }
+        }
+        catch(Exception e)
+        {
+        }
       }
     }.execute("Apple");
 

@@ -1,5 +1,7 @@
 package com.clarifai.androidstarter;
 
+import android.os.AsyncTask;
+
 import org.json.JSONObject;
 import java.net.URL;
 import java.net.URLConnection;
@@ -12,21 +14,29 @@ import java.nio.charset.Charset;
 /**
  * Created by Dingfeng on 3/9/2016.
  */
-public class foodQuery {
+public class foodQuery
+{
     private String initialAddress="http://api.nal.usda.gov/ndb/";
     private int ndbno;
     private String key="api_key="+Credentials.USDA_key;
 
-    public String search_for_food(String food)
+    public JSONObject search_for_food(String food)
     {
-        //String url=initialAddress+"search/?format=json&q="+food+"&sort=n&max=1&offset=0&"+key;
-        String url="http://api.nal.usda.gov/ndb/search/?format=json&q=apple&api_key=vF66hdnI9EUf8DsBjHIVpmCoFiUIfXUIWKFjTunA";
+        String url=initialAddress+"search/?format=json&q="+food+"&sort=n&max=1&offset=0&"+key;
         return create_json(url);
     }
 
-    public String create_json(String url)
+    public JSONObject check_calories(String ndbno)
     {
-        String result="12";
+        //http://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=DEMO_KEY&nutrients=208&ndbno=01009
+        String url=initialAddress+"nutrients/?format=json&"+key+"&nutrients=208&ndbno="+ndbno;
+        return create_json(url);
+    }
+
+
+    public JSONObject create_json(String url)
+    {
+        JSONObject result=null;
         try {
             URL address = new URL(url);
             URLConnection urlConnection = address.openConnection();
@@ -38,14 +48,16 @@ public class foodQuery {
             while ((inputStr = streamReader.readLine()) != null)
                 responseStrBuilder.append(inputStr);
 
-            result=responseStrBuilder.toString();
+            result=new JSONObject(responseStrBuilder.toString());
         }
         catch(Exception exception)
         {
-            result=exception.toString();
-
+            //result=exception.toString();
         }
-        return result;
+        if(result.has("list")||result.has("report"))
+            return result;
+        else
+            return null;
     }
 
 
