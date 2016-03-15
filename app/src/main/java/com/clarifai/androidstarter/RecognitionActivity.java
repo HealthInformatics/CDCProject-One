@@ -1,6 +1,7 @@
 package com.clarifai.androidstarter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +26,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.R.drawable;
 import android.util.Pair;
+import android.content.DialogInterface;
 
 
 import com.clarifai.api.ClarifaiClient;
@@ -54,6 +57,7 @@ public class RecognitionActivity extends Activity {
   private Button selectButton;
   private Button cameraButton;
   private Button confirmButton;
+  private Button enterTextButton;
   private ImageView imageView;
   private TextView textView;
   private TableLayout button_view;
@@ -72,6 +76,7 @@ public class RecognitionActivity extends Activity {
     selectButton = (Button) findViewById(R.id.select_button);
     cameraButton=(Button) findViewById(R.id.camera_button);
     confirmButton=(Button) findViewById(R.id.confirm_button);
+    enterTextButton=(Button) findViewById(R.id.popup_menu);
 
 
 
@@ -135,16 +140,21 @@ public class RecognitionActivity extends Activity {
     );
 
     confirmButton.setOnClickListener(
-            new View.OnClickListener()
-            {
-              public void onClick(View v)
-              {
-                String nutrition="";
-                for(Pair<String,String> value : food.values())
-                {
-                  nutrition=nutrition+value.first+" "+value.second+"\n";
+            new View.OnClickListener() {
+              public void onClick(View v) {
+                String nutrition = "";
+                for (Pair<String, String> value : food.values()) {
+                  nutrition = nutrition + value.first + " " + value.second + "\n";
                 }
                 textView.setText(nutrition);
+              }
+            }
+    );
+
+    enterTextButton.setOnClickListener(
+            new View.OnClickListener() {
+              public void onClick(View v) {
+                alert_dialog();
               }
             }
     );
@@ -153,6 +163,87 @@ public class RecognitionActivity extends Activity {
 
     Intent receive_intent=getIntent();
   }
+
+
+
+  private void alert_dialog()
+  {
+
+    AlertDialog.Builder alert=new AlertDialog.Builder(this);
+    final EditText edittext=new EditText(RecognitionActivity.this);
+    alert.setMessage("Enter Your Food");
+    alert.setTitle("Food name");
+
+    alert.setView(edittext);
+
+    alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int whichButton) {
+
+        String enter_value = edittext.getText().toString();
+        new AsyncTask<String, Void, String>() {
+          @Override
+          protected String doInBackground(String... strings) {
+            String result = "";
+            JSONObject food_item = food_calories.search_for_food(strings[0]);
+            if (food_item != null) {
+              try {
+                String s = food_item.getJSONObject("list").getJSONArray("item").getJSONObject(0).getString("ndbno");
+                if (!food.containsKey(s)) {
+                  JSONObject nutrition = food_calories.check_calories(s);
+                  if (nutrition != null) {
+                    String calory = nutrition.getJSONObject("report").getJSONArray("foods").getJSONObject(0).getJSONArray("nutrients").getJSONObject(0).getString("value");
+                    food.put(s, new Pair<String, String>(strings[0], calory));
+                    result=s;
+                  }
+                } else
+                  result = "1";
+              } catch (Exception e) {
+              }
+            } else
+              result = "2";
+            return result;
+          }
+
+          @Override
+          protected void onPostExecute(String result) {
+            updateUIForUserEnter(result);
+          }
+        }.execute(enter_value);
+      }
+    });
+
+    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int whichButton) {
+      }
+    });
+
+    alert.show();
+  }
+
+  private void updateUIForUserEnter(final String result) {
+    if (!result.equals("1")&&!result.equals("2")&&!result.equals(""))
+    {
+            TableRow tr = new TableRow(this);
+            final Button temp_button = new Button(this);
+            temp_button.setText(food.get(result).first);
+            temp_button.setTextSize(12);
+            Drawable close_icon = getDrawable(drawable.ic_delete);
+      close_icon.setBounds(0, 0, 40, 40);
+            temp_button.setCompoundDrawables(null, null, close_icon, null);
+            temp_button.setOnClickListener(
+                    new View.OnClickListener() {
+                      public void onClick(View v) {
+                        temp_button.setVisibility(View.GONE);
+                        food.remove(result);
+                      }
+                    }
+            );
+      tr.addView(temp_button);
+            button_view.addView(tr);
+  }
+}
+
+
 
 
 
@@ -310,7 +401,6 @@ public class RecognitionActivity extends Activity {
         if(food.size()==0)
           textView.setText("No food");
         else {
-          ArrayList<Button> mybutton = new ArrayList<Button>();
           int i = 0;
           TableRow tr = new TableRow(this);
           for (final Map.Entry<String, Pair<String, String>> entry : food.entrySet()) {
@@ -332,7 +422,6 @@ public class RecognitionActivity extends Activity {
                     }
             );
             tr.addView(temp_button);
-            mybutton.add(temp_button);
             i++;
             if (i == 3) {
               button_view.addView(tr);

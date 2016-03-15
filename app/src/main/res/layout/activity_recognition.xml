@@ -38,8 +38,8 @@
         >
   <Button
       android:id="@+id/select_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="100dp"
+      android:layout_height="match_parent"
       android:background="#3d88ec"
       android:text="@string/select_image"
 
@@ -47,10 +47,19 @@
       android:layout_weight="1"
       />
 
-    <Button
+        <Button
+            android:id="@+id/popup_menu"
+            android:layout_width="71dp"
+            android:layout_height="match_parent"
+            android:background="#3d88ec"
+            android:text="ENTER TEXT"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="1" />
+
+        <Button
         android:id="@+id/camera_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
         android:background="#3d88ec"
         android:text="@string/take_image"
         android:layout_gravity="bottom|center_horizontal"
@@ -58,12 +67,12 @@
         />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
             android:text="Confirm"
             android:id="@+id/confirm_button"
             android:background="#3d88ec"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_weight="1" />
+    android:layout_weight="1" />
     </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
