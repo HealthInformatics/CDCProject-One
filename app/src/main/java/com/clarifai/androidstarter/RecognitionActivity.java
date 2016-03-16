@@ -192,7 +192,9 @@ public class RecognitionActivity extends Activity {
                   JSONObject nutrition = food_calories.check_calories(s);
                   if (nutrition != null) {
                     String calory = nutrition.getJSONObject("report").getJSONArray("foods").getJSONObject(0).getJSONArray("nutrients").getJSONObject(0).getString("value");
-                    food.put(s, new Pair<String, String>(strings[0], calory));
+                    String unit=nutrition.getJSONObject("report").getJSONArray("foods").getJSONObject(0).getJSONArray("nutrients").getJSONObject(0).getString("unit");
+                    String measure=nutrition.getJSONObject("report").getJSONArray("foods").getJSONObject(0).getString("measure");
+                    food.put(s, new Pair<String, String>(strings[0], calory+unit+"/"+measure));
                     result=s;
                   }
                 } else
