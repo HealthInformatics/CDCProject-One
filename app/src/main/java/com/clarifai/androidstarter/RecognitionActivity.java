@@ -138,12 +138,11 @@ public class RecognitionActivity extends Activity {
 
                   @Override
                   protected void onPostExecute(String result) {
-                    textView.setText(result);
+                    Intent confirm_intent = new Intent(RecognitionActivity.this, confirm_page.class);
+                    confirm_intent.putExtra("data",result);
+                    startActivity(confirm_intent);
                   }
                 }.execute();
-
-
-
               }
             }
     );

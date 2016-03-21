@@ -27,13 +27,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.clarifai.androidstarter.MainActivity" />
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".MainActivity"
@@ -46,13 +39,12 @@
         </activity>
         <activity
             android:name=".map.MapActivity"
-            android:label="@string/title_activity_map"></activity>
-        <activity android:name=".BMI">
-
-        </activity>
-        <activity android:name=".LoginActivity">
-
-        </activity>
+            android:label="@string/title_activity_map" />
+        <activity android:name=".BMI"></activity>
+        <activity android:name=".LoginActivity"></activity>
+        <activity
+            android:name=".confirm_page"
+            android:label="@string/title_activity_confirm_page"></activity>
     </application>
 
 </manifest>
