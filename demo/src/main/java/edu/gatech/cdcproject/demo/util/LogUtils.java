@@ -40,6 +40,11 @@ public class LogUtils {
         return makeLogTag(cls.getSimpleName());
     }
 
+    /**
+     * Debug
+     * @param tag
+     * @param message
+     */
     public static void LOGD(final String tag, String message) {
         if (LOGGING_ENABLED){
             if (Log.isLoggable(tag, Log.DEBUG)) {
@@ -56,6 +61,11 @@ public class LogUtils {
         }
     }
 
+    /**
+     * Verbose
+     * @param tag
+     * @param message
+     */
     public static void LOGV(final String tag, String message) {
         if (LOGGING_ENABLED) {
             if (Log.isLoggable(tag, Log.VERBOSE)) {
@@ -72,6 +82,11 @@ public class LogUtils {
         }
     }
 
+    /**
+     * Info
+     * @param tag
+     * @param message
+     */
     public static void LOGI(final String tag, String message) {
         if (LOGGING_ENABLED) {
             Log.i(tag, message);
@@ -84,6 +99,11 @@ public class LogUtils {
         }
     }
 
+    /**
+     * Warning
+     * @param tag
+     * @param message
+     */
     public static void LOGW(final String tag, String message) {
         if (LOGGING_ENABLED) {
             Log.w(tag, message);

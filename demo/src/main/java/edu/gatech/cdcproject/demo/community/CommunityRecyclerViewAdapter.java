@@ -2,6 +2,8 @@ package edu.gatech.cdcproject.demo.community;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -17,6 +21,7 @@ import static edu.gatech.cdcproject.demo.util.LogUtils.*;
 
 import edu.gatech.cdcproject.backend.myApi.model.FoodImage;
 import edu.gatech.cdcproject.demo.R;
+import edu.gatech.cdcproject.demo.util.IntentUtils;
 
 /**
  * Created by guoweidong on 10/24/15.
@@ -65,6 +70,15 @@ public class CommunityRecyclerViewAdapter extends RecyclerView.Adapter<Community
                 .load(foodImage.getImageUrl())
                 .into(viewHolder.foodImg);
         viewHolder.titleTxt.setText(foodImage.getTitle());
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CommunityDetailsActivity.class);
+                intent.putExtra(IntentUtils.INTENT_EXTRA_FOODIMAGE_ID, foodImage.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

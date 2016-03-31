@@ -18,11 +18,11 @@ public class Api {
                 (AndroidHttp.newCompatibleTransport(), new
                         AndroidJsonFactory(), null)
                 .setRootUrl(BuildConfig.APP_HOME + "/_ah/api/");
-        builder.setApplicationName("CDC Project");
+        builder.setApplicationName(BuildConfig.APP_NAME);
         myApi = builder.build();
     }
 
-    public static MyApi getClient() {
+    public static MyApi myApi() {
         return myApi;
     }
 }

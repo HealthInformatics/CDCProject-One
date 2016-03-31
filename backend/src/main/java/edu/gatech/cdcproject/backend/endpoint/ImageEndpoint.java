@@ -83,6 +83,20 @@ public class ImageEndpoint {
     }
 
     @ApiMethod(
+            name = "image.get",
+            path = "image/get",
+            httpMethod = ApiMethod.HttpMethod.GET)
+    public FoodImage get(@Named("id") Long id)
+            throws BadRequestException {
+        if (id == null) {
+            logger.warning("Null id");
+            throw new BadRequestException("Null id");
+        }
+
+        return ofy().load().type(FoodImage.class).id(id).now();
+    }
+
+    @ApiMethod(
             name = "image.list",
             path = "image/list",
             httpMethod = ApiMethod.HttpMethod.GET)

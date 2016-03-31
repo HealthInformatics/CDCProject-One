@@ -45,7 +45,7 @@ import edu.gatech.cdcproject.demo.ui.MainActivity;
 import edu.gatech.cdcproject.demo.util.ImageUploader;
 
 import static edu.gatech.cdcproject.demo.util.LogUtils.*;
-
+import static edu.gatech.cdcproject.demo.network.Api.myApi;
 /**
  * Created by guoweidong on 3/28/16.
  */
@@ -155,7 +155,7 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
         } else if (requestCode == REQUEST_CODE_PHOTO) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data == null) {
-                    Log.i("myinfo", "data is empty");
+                    LOGI(TAG, "data is empty");
                 }
                 try {
                     InputStream in = getActivity().getContentResolver().openInputStream
@@ -252,7 +252,7 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
         @Override
         protected CollectionResponseFoodImage doInBackground(Void... params) {
             try {
-                return Api.getClient().image().list().execute();
+                return myApi().image().list().execute();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -285,7 +285,7 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
         @Override
         protected CollectionResponseFoodImage doInBackground(String... params) {
             try {
-                return Api.getClient().image().list().setCursor(cursor).execute();
+                return myApi().image().list().setCursor(cursor).execute();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -305,7 +305,6 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
             //set data for list
 
         }
-
     }
 
     private class AddImageTask extends AsyncTask<Drawable, Void, Void> {
@@ -329,7 +328,7 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
                 foodImage.setImageKey(imageInfo.imageKey);
                 foodImage.setImageUrl(imageInfo.imageURL);
 
-                Api.getClient().image().insert(foodImage)
+                myApi().image().insert(foodImage)
                         .execute();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -32,6 +32,7 @@ android {
             signingConfig signingConfigs.debug
             buildConfigField("boolean", "ENABLE_LOG", "${enable_log}")
             buildConfigField("String", "APP_HOME", "\"${app_home}\"")
+            buildConfigField("String", "APP_NAME", "\"${app_name}\"")
             resValue("string", "ANDROID_KEY", "${android_key}")
             resValue("string", "SERVER_KEY", "${server_key}")
 
@@ -60,6 +61,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.code.gson:gson:1.7.2'
     compile 'com.github.orangegangsters:swipy:1.2.1@aar'
     compile project(path: ':backend', configuration: 'android-endpoints')
     compile group: 'cz.msebera.android' , name: 'httpclient', version: '4.4.1.1'
