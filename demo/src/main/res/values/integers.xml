@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="navdrawer_community">101</integer>
+    <integer name="navdrawer_foodidentify">102</integer>
+    <integer name="navdrawer_healthrecord">103</integer>
+    <integer name="navdrawer_settings">104</integer>
+    <integer name="navdrawer_about">105</integer>
+
+</resources>
