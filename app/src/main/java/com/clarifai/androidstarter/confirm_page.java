@@ -10,6 +10,8 @@ import android.widget.Button;
 
 import com.clarifai.androidstarter.R;
 
+import java.util.ArrayList;
+
 public class confirm_page extends Activity {
 
     private TextView textview;
@@ -27,8 +29,8 @@ public class confirm_page extends Activity {
 
 
         Intent myIntent = getIntent();
-        String data = myIntent.getStringExtra("data");
-        textview.setText(data);
+        ArrayList<String> data = myIntent.getExtras().getParcelable("data");
+        //textview.setText(data);
 
         cancel_button.setOnClickListener(
                 new View.OnClickListener() {
