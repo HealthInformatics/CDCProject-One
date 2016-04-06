@@ -14,20 +14,13 @@
       android:contentDescription="@string/user_image"/>
 
 
-    <TextView
 
-        android:layout_width="83dp"
-        android:layout_height="44dp"
-        android:text="New Text"
-        android:id="@+id/counter"
-        android:layout_gravity="center_horizontal" />
-
-    <LinearLayout
-        android:id="@+id/button_view"
-        android:orientation="vertical"
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="285dp"
-        android:layout_gravity="center_horizontal"></LinearLayout>
+        android:layout_height="280dp"
+        android:scrollbars="vertical"
+        android:id="@+id/button_view"
+        android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"

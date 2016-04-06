@@ -34,6 +34,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.widget.ListView;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 
 import com.clarifai.api.ClarifaiClient;
@@ -42,15 +43,11 @@ import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
 import com.clarifai.api.exception.ClarifaiException;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.*;
+
 
 
 //This is the food identify activity, called by main activity.
@@ -67,28 +64,38 @@ public class RecognitionActivity extends Activity {
   private Button confirmButton;
   private Button enterTextButton;
   private ImageView imageView;
-  private LinearLayout button_view;
+
+  //private LinearLayout button_view;
+  private ListView button_view;
+  private ArrayAdapter adapter;
+
   private ArrayList<String> food = new ArrayList<String>();
-  private ArrayList<Button> buttons=new ArrayList<Button>();
-  private int text_size=10;
-  private TextView counter;
 
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recognition);
 
-    counter=(TextView)findViewById(R.id.counter);
-    button_view=(LinearLayout) findViewById(R.id.button_view);
+    button_view=(ListView) findViewById(R.id.button_view);
+
+
     imageView = (ImageView) findViewById(R.id.image_view);
     selectButton = (Button) findViewById(R.id.select_button);
     cameraButton=(Button) findViewById(R.id.camera_button);
     confirmButton=(Button) findViewById(R.id.confirm_button);
     enterTextButton=(Button) findViewById(R.id.popup_menu);
 
-
-
-
+    adapter = new ArrayAdapter<String>(this, R.layout.activity_listview,food);
+    button_view.setAdapter(adapter);
+    button_view.setOnItemClickListener(
+            new OnItemClickListener()
+            {
+              public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+              {
+                food.remove(((TextView) view).getText().toString().toLowerCase());
+                adapter.notifyDataSetChanged();
+              }
+    });
 
 
     selectButton.setOnClickListener(
@@ -118,7 +125,7 @@ public class RecognitionActivity extends Activity {
             new View.OnClickListener() {
               public void onClick(View v) {
                 Intent confirm_intent = new Intent(RecognitionActivity.this, confirm_page.class);
-                confirm_intent.putExtra("data", food);
+                confirm_intent.putStringArrayListExtra("data",food);
                 startActivity(confirm_intent);
               }
             }
@@ -149,34 +156,13 @@ public class RecognitionActivity extends Activity {
 
         String enter_value = edittext.getText().toString();
         if(!Check_Appear(enter_value)) {
-          //TableRow tr = new TableRow(RecognitionActivity.this);
-          final Button temp_button = new Button(RecognitionActivity.this);
 
-          temp_button.setText(enter_value.toLowerCase());
-          food.add(enter_value.toLowerCase());
+          food.add(0, enter_value.toLowerCase());
+          adapter.notifyDataSetChanged();
 
-          temp_button.setTextSize(text_size);
-          Drawable close_icon = getDrawable(drawable.ic_delete);
-          close_icon.setBounds(0, 0, 10, 10);
-          temp_button.setCompoundDrawables(null, null, close_icon, null);
-          temp_button.setOnClickListener(
-                  new View.OnClickListener() {
-                    public void onClick(View v) {
-                      food.remove(temp_button.getText().toString().toLowerCase());
-                      buttons.remove(temp_button);
-                      temp_button.setVisibility(View.GONE);
-                      counter.setText(Integer.toString(buttons.size()));
-                      populateText();
-
-                    }
-                  }
-          );
-          buttons.add(temp_button);
-          counter.setText(Integer.toString(buttons.size()));
-          populateText();
         }
         else
-          Toast.makeText(getApplicationContext(),"Already exists",Toast.LENGTH_LONG).show();
+          Toast.makeText(getApplicationContext(),"Already exists",Toast.LENGTH_SHORT).show();
       }
     });
 
@@ -231,7 +217,7 @@ public class RecognitionActivity extends Activity {
       if (bitmap != null)
       {
         imageView.setImageBitmap(bitmap);
-        Toast.makeText(getApplicationContext(),"Recognizing...",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Recognizing...",Toast.LENGTH_SHORT).show();
         selectButton.setEnabled(false);
 
         // Run recognition on a background thread since it makes a network call.
@@ -256,7 +242,7 @@ public class RecognitionActivity extends Activity {
       Bitmap bp=(Bitmap) intent.getExtras().get("data");
       if(bp!=null) {
         imageView.setImageBitmap(bp);
-        Toast.makeText(getApplicationContext(), "Recognizing...", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Recognizing...", Toast.LENGTH_SHORT).show();
         cameraButton.setEnabled(false);
         new AsyncTask<Bitmap, Void, RecognitionResult>() {
           @Override
@@ -264,9 +250,7 @@ public class RecognitionActivity extends Activity {
 
             RecognitionResult result = recognizeBitmap(bitmaps[0]);
             return result;
-
           }
-
           @Override
           protected void onPostExecute(RecognitionResult result) {
             updateUIForResult(result);
@@ -328,35 +312,15 @@ public class RecognitionActivity extends Activity {
     {
       if (result.getStatusCode() == RecognitionResult.StatusCode.OK)
       {
-          for (Tag t : result.getTags()) {
+          for (Tag t : result.getTags())
+          {
             if(Check_Appear(t.getName()))
               continue;
 
-            final Button temp_button = new Button(this);
-
-            temp_button.setText(t.getName().toLowerCase());
-            food.add(t.getName().toLowerCase());
-
-            temp_button.setTextSize(text_size);
-            Drawable close_icon = getDrawable(drawable.ic_delete);
-            close_icon.setBounds(0, 0, 10, 10);
-            temp_button.setCompoundDrawables(null, null, close_icon, null);
-            temp_button.setOnClickListener(
-                    new View.OnClickListener() {
-                      public void onClick(View v) {
-                        food.remove(temp_button.getText().toString().toLowerCase());
-                        buttons.remove(temp_button);
-                        temp_button.setVisibility(View.GONE);
-                        counter.setText(Integer.toString(buttons.size()));
-                        populateText();
-                      }
-                    }
-            );
-            buttons.add(temp_button);
+            food.add(0,t.getName().toLowerCase());
+            adapter.notifyDataSetChanged();
           }
           Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-        counter.setText(Integer.toString(buttons.size()));
-        populateText();
       }
       else
       {
@@ -383,7 +347,7 @@ public class RecognitionActivity extends Activity {
     return false;
   }
 
-
+/*
   private void populateText()
   {
     Display display = getWindowManager().getDefaultDisplay();
@@ -426,7 +390,7 @@ public class RecognitionActivity extends Activity {
 
     }
   }
-
+*/
 
 
 }
