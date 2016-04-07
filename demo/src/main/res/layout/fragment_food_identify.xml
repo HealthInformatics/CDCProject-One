@@ -1,10 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This is Food Identify Fragment. "/>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".RecognitionActivity">
 
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop" />
+
+
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:scrollbars="vertical"
+        android:id="@+id/button_view"
+        android:layout_gravity="center_horizontal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        >
+        <Button
+            android:id="@+id/select_button"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#3d88ec"
+            android:text="SELECT_IMAGE"
+
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/popup_menu"
+            android:layout_width="71dp"
+            android:layout_height="match_parent"
+            android:background="#3d88ec"
+            android:text="ENTER TEXT"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/camera_button"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="#3d88ec"
+            android:text="TAKE PIC"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="Confirm"
+            android:id="@+id/confirm_button"
+            android:background="#3d88ec"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="1" />
+    </LinearLayout>
 </LinearLayout>
