@@ -107,6 +107,7 @@ public class FoodIdentifyFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // Make sure the camera permission is granted
                         Intent cam_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(cam_intent, CODE_CAM);
                     }
