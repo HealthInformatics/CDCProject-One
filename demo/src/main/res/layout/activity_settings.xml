@@ -41,5 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log in"
-        android:id="@+id/loginBt" />
+        android:id="@+id/loginBt"
+        android:clickable="true"
+        android:onClick="myLogin" />
 </LinearLayout>
