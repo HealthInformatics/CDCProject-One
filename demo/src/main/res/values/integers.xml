@@ -5,5 +5,6 @@
     <integer name="navdrawer_healthrecord">103</integer>
     <integer name="navdrawer_settings">104</integer>
     <integer name="navdrawer_about">105</integer>
+    <integer name="navdrawer_BMI">106</integer>
 
 </resources>

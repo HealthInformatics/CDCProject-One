@@ -24,6 +24,7 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
+import edu.gatech.cdcproject.demo.BMI.BMI;
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.about.AboutActivity;
 import edu.gatech.cdcproject.demo.community.CommunityFragment;
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.navdrawer_community).withIcon(R.drawable.ic_community_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_community)),
                         new PrimaryDrawerItem().withName(R.string.navdrawer_foodidentify).withIcon(R.drawable.ic_food_indentify_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_foodidentify)),
                         new PrimaryDrawerItem().withName(R.string.navdrawer_healthrecord).withIcon(R.drawable.ic_health_record_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_healthrecord)),
+                        new PrimaryDrawerItem().withName("BMI").withIdentifier(getInteger(R.integer.navdrawer_BMI)),
                         new SectionDrawerItem().withName("Others"),
                         new PrimaryDrawerItem().withName(R.string.navdrawer_settings).withIcon(R.drawable.ic_settings_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_settings)),
                         new PrimaryDrawerItem().withName(R.string.navdrawer_about).withIcon(R.drawable.ic_about_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_about))
@@ -132,7 +134,12 @@ public class MainActivity extends AppCompatActivity {
             startActivityWithParentStack(new Intent(this, SettingsActivity.class));
         } else if(itemId == getInteger(R.integer.navdrawer_about)) {
             startActivityWithParentStack(new Intent(this, AboutActivity.class));
-        } else {
+        } else if(itemId==getInteger(R.integer.navdrawer_BMI))
+        {
+            toolbar.setTitle(R.string.navdrawer_BMI);
+            switchFragment(new BMI(), getString(R.string.navdrawer_BMI));
+        }
+        else {
             LOGE(TAG, "Unkown navigation drawer item id. ");
         }
 
