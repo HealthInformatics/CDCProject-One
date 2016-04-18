@@ -6,27 +6,39 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.about.AboutActivity;
 
 public class confirm_page extends AppCompatActivity {
 
-    private TextView textview;
+    private ListView result_view;
+    private ArrayAdapter adapter;
+
     private Button cancel_button;
     private Button upload_button;
-    private ListView listView;
     private CheckBox fruit_and_veggie;
     private CheckBox sweet_drink;
     private CheckBox fruit_drink;
     private String data_from_recognition;
+    private ArrayList<String> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +56,8 @@ public class confirm_page extends AppCompatActivity {
             }
         });
 
-        textview=(TextView)findViewById(R.id.textView);
+        result_view=(ListView)findViewById(R.id.result_view);
+
 
         cancel_button=(Button) findViewById(R.id.cancel_data);
         upload_button=(Button) findViewById(R.id.upload_data);
@@ -54,14 +67,12 @@ public class confirm_page extends AppCompatActivity {
 
 
         Intent myIntent = getIntent();
-        ArrayList<String> data = myIntent.getStringArrayListExtra("data");
+        data = myIntent.getStringArrayListExtra("data");
 
-        data_from_recognition="";
-        for(String s:data)
-        {
-            data_from_recognition=data_from_recognition+"\n"+s;
-        }
-        textview.setText(data_from_recognition);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,data);
+
+
+        result_view.setAdapter(adapter);
 
 
         cancel_button.setOnClickListener(
@@ -79,13 +90,21 @@ public class confirm_page extends AppCompatActivity {
                     public void onClick(View v)
                     {
                         if(fruit_drink.isChecked())
-                            data_from_recognition=fruit_drink.getText()+"\n"+data_from_recognition;
+                            data.add(0,fruit_drink.getText().toString());
                         if(fruit_and_veggie.isChecked())
-                            data_from_recognition=fruit_and_veggie.getText()+"\n"+data_from_recognition;
+                            data.add(0,fruit_and_veggie.getText().toString());
                         if(sweet_drink.isChecked())
-                            data_from_recognition=sweet_drink.getText()+"\n"+data_from_recognition;
+                            data.add(0,sweet_drink.getText().toString());
 
-                        textview.setText(data_from_recognition);
+                        adapter.notifyDataSetChanged();
+
+                        Firebase myFirebaseRef = new Firebase("https://glaring-fire-1928.firebaseio.com/");
+
+                        Calendar cal = Calendar.getInstance();
+                        String date=""+cal.getTime();
+
+                        myFirebaseRef.child("food").child(date).setValue(data);
+                        finish();
                     }
                 }
         );

@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.navdrawer_community).withIcon(R.drawable.ic_community_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_community)),
                         new PrimaryDrawerItem().withName(R.string.navdrawer_foodidentify).withIcon(R.drawable.ic_food_indentify_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_foodidentify)),
                         new PrimaryDrawerItem().withName(R.string.navdrawer_healthrecord).withIcon(R.drawable.ic_health_record_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_healthrecord)),
-                        new PrimaryDrawerItem().withName("BMI").withIdentifier(getInteger(R.integer.navdrawer_BMI)),
+                        new PrimaryDrawerItem().withName("BMI").withIcon(R.drawable.ic_bmi).withIdentifier(getInteger(R.integer.navdrawer_BMI)),
                         new SectionDrawerItem().withName("Others"),
                         new PrimaryDrawerItem().withName(R.string.navdrawer_settings).withIcon(R.drawable.ic_settings_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_settings)),
                         new PrimaryDrawerItem().withName(R.string.navdrawer_about).withIcon(R.drawable.ic_about_black_24dp).withIdentifier(getInteger(R.integer.navdrawer_about))
