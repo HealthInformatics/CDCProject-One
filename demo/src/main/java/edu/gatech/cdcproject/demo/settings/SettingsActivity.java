@@ -63,6 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
                         if (editText_1.getText().toString().equals(snapshot.child("PW").getValue().toString())) {
                             System.out.println("Log in!");
                             ID=editText_0.getText().toString();
+                            
                             Toast.makeText(getApplicationContext(),"Login in successful!",Toast.LENGTH_SHORT).show();
                             finish();
                         }
