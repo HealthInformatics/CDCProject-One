@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -19,6 +20,7 @@ import edu.gatech.cdcproject.demo.R;
 public class SettingsActivity extends AppCompatActivity {
     private Button logInButton;
     public static Firebase myFirebaseRef;
+    public static String ID;
     private EditText editText_0;
     private EditText editText_1;
     @Override
@@ -59,13 +61,10 @@ public class SettingsActivity extends AppCompatActivity {
                         System.out.print(snapshot.child("PW").getValue());
                         if (editText_1.getText().toString().equals(snapshot.child("PW").getValue())) {
                             System.out.println("Log in!");
-<<<<<<< HEAD
                             ID=editText_0.getText().toString();
                             
-                            Toast.makeText(getApplicationContext(),"Login in successful!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"Login in successful!", Toast.LENGTH_SHORT).show();
                             finish();
-=======
->>>>>>> origin/master
                         }
                     }
                 }
