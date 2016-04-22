@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -18,7 +19,8 @@ import edu.gatech.cdcproject.demo.R;
  */
 public class SettingsActivity extends AppCompatActivity {
     private Button logInButton;
-
+    public static Firebase myFirebaseRef;
+    private EditText editText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void setupUI() {
         // Toolbar
+        editText = (EditText) findViewById(R.id.usernameText);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Settings");
         setSupportActionBar(toolbar);
@@ -42,20 +45,17 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void myLogin(View v){
-        Firebase myFirebaseRef = new Firebase("https://glaring-fire-1928.firebaseio.com/");
-        myFirebaseRef.child("message").setValue("Do you have data? You'll love Firebase.");
+        myFirebaseRef = new Firebase("https://sizzling-fire-2230.firebaseio.com/");
 
-        myFirebaseRef.child("message").addValueEventListener(new ValueEventListener() {
-
+        myFirebaseRef.child(editText.getText().toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                System.out.println(snapshot.getValue());  //prints "Do you have data? You'll love Firebase."
+                System.out.println((int)snapshot.child("PW").getValue());
             }
-
             @Override
             public void onCancelled(FirebaseError error) {
+                System.out.print("Cannot login");
             }
-
         });
     }
 

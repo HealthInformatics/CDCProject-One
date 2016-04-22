@@ -54,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
         setupNavDrawer();
 
-        switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));
+        //switchFragment(new CommunityFragment(), getString(R.string.navdrawer_settings));
 
-
+        startActivityWithParentStack(new Intent(this, SettingsActivity.class));
     }
 
     @Override
