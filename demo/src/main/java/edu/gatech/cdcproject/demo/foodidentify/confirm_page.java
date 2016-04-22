@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.firebase.client.DataSnapshot;
@@ -26,6 +27,7 @@ import java.util.TimeZone;
 
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.about.AboutActivity;
+import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 
 public class confirm_page extends AppCompatActivity {
 
@@ -45,16 +47,16 @@ public class confirm_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_page);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("About");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirm_page.this.onBackPressed();
-            }
-        });
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle("About");
+        //setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+         //   @Override
+         //   public void onClick(View v) {
+         //       confirm_page.this.onBackPressed();
+         //   }
+        //});
 
         result_view=(ListView)findViewById(R.id.result_view);
 
@@ -98,12 +100,13 @@ public class confirm_page extends AppCompatActivity {
 
                         adapter.notifyDataSetChanged();
 
-                        Firebase myFirebaseRef = new Firebase("https://glaring-fire-1928.firebaseio.com/");
 
                         Calendar cal = Calendar.getInstance();
                         String date=""+cal.getTime();
-
-                        myFirebaseRef.child("food").child(date).setValue(data);
+                        if(SettingsActivity.ID!=null)
+                            SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("food").child(date).setValue(data);
+                        else
+                            Toast.makeText(getApplicationContext(),"Login in first",Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }
