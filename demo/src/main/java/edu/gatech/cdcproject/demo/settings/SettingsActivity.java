@@ -14,9 +14,8 @@ import com.firebase.client.ValueEventListener;
 
 import edu.gatech.cdcproject.demo.R;
 
-/**
- * Created by guoweidong on 3/28/16.
- */
+
+
 public class SettingsActivity extends AppCompatActivity {
     private Button logInButton;
     public static Firebase myFirebaseRef;
@@ -47,8 +46,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void myLogin(View v){
-        myFirebaseRef = new Firebase("https://sizzling-fire-2230.firebaseio.com/");
 
+        myFirebaseRef = new Firebase("https://sizzling-fire-2230.firebaseio.com/");
         myFirebaseRef.child(editText_0.getText().toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

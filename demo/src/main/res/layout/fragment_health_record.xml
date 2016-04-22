@@ -7,4 +7,10 @@
         android:layout_height="wrap_content"
         android:text="This is Health Record Fragment. "/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Health Record"
+        android:id="@+id/button_0" />
+
 </LinearLayout>
