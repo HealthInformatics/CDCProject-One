@@ -20,7 +20,8 @@ import edu.gatech.cdcproject.demo.R;
 public class SettingsActivity extends AppCompatActivity {
     private Button logInButton;
     public static Firebase myFirebaseRef;
-    private EditText editText;
+    private EditText editText_0;
+    private EditText editText_1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +31,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void setupUI() {
         // Toolbar
-        editText = (EditText) findViewById(R.id.usernameText);
+        editText_0 = (EditText) findViewById(R.id.usernameText);
+        editText_1 = (EditText) findViewById(R.id.passwordText);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Settings");
         setSupportActionBar(toolbar);
@@ -47,11 +49,22 @@ public class SettingsActivity extends AppCompatActivity {
     public void myLogin(View v){
         myFirebaseRef = new Firebase("https://sizzling-fire-2230.firebaseio.com/");
 
-        myFirebaseRef.child(editText.getText().toString()).addValueEventListener(new ValueEventListener() {
+        myFirebaseRef.child(editText_0.getText().toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                System.out.println((int)snapshot.child("PW").getValue());
+                if (snapshot != null) {
+                    System.out.println("Account exists!");
+                    if (snapshot.hasChild("PW")) {
+                        System.out.println("Has pw!");
+                        System.out.print(editText_1.getText().toString());
+                        System.out.print(snapshot.child("PW").getValue());
+                        if (editText_1.getText().toString().equals(snapshot.child("PW").getValue())) {
+                            System.out.println("Log in!");
+                        }
+                    }
+                }
             }
+
             @Override
             public void onCancelled(FirebaseError error) {
                 System.out.print("Cannot login");
