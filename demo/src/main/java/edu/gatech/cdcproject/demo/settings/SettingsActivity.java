@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -15,22 +14,18 @@ import com.firebase.client.ValueEventListener;
 
 import edu.gatech.cdcproject.demo.R;
 
-/**
- * Created by guoweidong on 3/28/16.
- */
+
+
 public class SettingsActivity extends AppCompatActivity {
     private Button logInButton;
-    public static Firebase myFirebaseRef=new Firebase("https://sizzling-fire-2230.firebaseio.com/");
-    public static String ID;
+    public static Firebase myFirebaseRef;
     private EditText editText_0;
     private EditText editText_1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
         setupUI();
-
     }
 
     private void setupUI() {
@@ -51,6 +46,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void myLogin(View v){
+
+        myFirebaseRef = new Firebase("https://sizzling-fire-2230.firebaseio.com/");
         myFirebaseRef.child(editText_0.getText().toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -60,12 +57,15 @@ public class SettingsActivity extends AppCompatActivity {
                         System.out.println("Has pw!");
                         System.out.print(editText_1.getText().toString());
                         System.out.print(snapshot.child("PW").getValue());
-                        if (editText_1.getText().toString().equals(snapshot.child("PW").getValue().toString())) {
+                        if (editText_1.getText().toString().equals(snapshot.child("PW").getValue())) {
                             System.out.println("Log in!");
+<<<<<<< HEAD
                             ID=editText_0.getText().toString();
                             
                             Toast.makeText(getApplicationContext(),"Login in successful!",Toast.LENGTH_SHORT).show();
                             finish();
+=======
+>>>>>>> origin/master
                         }
                     }
                 }
