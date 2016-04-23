@@ -47,6 +47,7 @@ public class BMI extends Fragment
         height = (EditText) view.findViewById(R.id.input_height);
         result=(TextView) view.findViewById(R.id.result);
         calculate = (Button) view.findViewById(R.id.calculate);
+
         calculate.setOnClickListener(
                 new View.OnClickListener()
                 {
