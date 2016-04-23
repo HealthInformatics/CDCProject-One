@@ -1,6 +1,8 @@
 package edu.gatech.cdcproject.demo.healthrecord;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
+import com.clarifai.api.RecognitionResult;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -60,21 +64,26 @@ public class HealthRecordFragment extends Fragment {
                 //Bundle bundle = client.search().forResource(Patient.class)
                 //        .where(Patient.In)
 
-
                 String dataURL="http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/1142?_format=json";
-                HttpClient client = HttpClientBuilder.create().build();
-                HttpGet request = new HttpGet(dataURL);
-                // replace with your url
 
-                HttpResponse response;
-                try {
-                    response = client.execute(request);
 
-                    System.out.println("!!!!!!!!!!!!!!!!!" + response.toString());
-                } catch (Exception e) {
-                    System.out.println("!!!!!!!!!!!!!!!!!"+e.getMessage());
-                }
-
+                new AsyncTask<String, Void, String>()
+                {
+                    @Override protected String doInBackground(String... dataurls)
+                    {
+                        try {
+                            return sendGet(dataurls[0]);
+                        }
+                        catch(Exception e)
+                        {
+                            return "error "+e.getMessage();
+                        }
+                    }
+                    @Override protected void onPostExecute(String result)
+                    {
+                        textView.setText(result);
+                    }
+                }.execute(dataURL);
 
 
 
@@ -84,6 +93,51 @@ public class HealthRecordFragment extends Fragment {
 
         return view;
     }
+
+
+
+    private String sendGet(String url) throws Exception {
+
+
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        // optional default is GET
+        con.setRequestMethod("GET");
+
+
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //print result
+        System.out.println(response.toString());
+        return response.toString();
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void setupUI() {
 

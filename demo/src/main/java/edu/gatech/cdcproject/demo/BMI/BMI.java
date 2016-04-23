@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -24,6 +25,7 @@ import java.util.Map;
 
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.BuildConfig;
+import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 
 public class BMI extends Fragment
 {
@@ -55,7 +57,6 @@ public class BMI extends Fragment
                     public void onClick(View v)
                     {
                         cal_BMI();
-                        Firebase myFirebaseRef = new Firebase("https://glaring-fire-1928.firebaseio.com/");
 
                         Calendar cal = Calendar.getInstance();
                         String date=""+cal.getTime();
@@ -65,7 +66,10 @@ public class BMI extends Fragment
                         result_value.put("Weight",weight.getText().toString()+weight_spinner.getSelectedItem());
                         result_value.put("BMI", Float.toString(BMI_value));
 
-                        myFirebaseRef.child("BMI").child(date).setValue(result_value);
+                        if(SettingsActivity.ID!=null)
+                            SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("BMI").child(date).setValue(result_value);
+                        else
+                            Toast.makeText(getContext(), "Please login in first", Toast.LENGTH_SHORT).show();
                     }
                 }
         );

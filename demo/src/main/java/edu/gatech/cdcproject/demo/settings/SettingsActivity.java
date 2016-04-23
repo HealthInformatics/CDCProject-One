@@ -19,7 +19,7 @@ import edu.gatech.cdcproject.demo.R;
 
 public class SettingsActivity extends AppCompatActivity {
     private Button logInButton;
-    public static Firebase myFirebaseRef;
+    public static Firebase myFirebaseRef= new Firebase("https://sizzling-fire-2230.firebaseio.com/");;
     public static String ID;
     private EditText editText_0;
     private EditText editText_1;
@@ -49,7 +49,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void myLogin(View v){
 
-        myFirebaseRef = new Firebase("https://sizzling-fire-2230.firebaseio.com/");
         myFirebaseRef.child(editText_0.getText().toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -59,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
                         System.out.println("Has pw!");
                         System.out.print(editText_1.getText().toString());
                         System.out.print(snapshot.child("PW").getValue());
-                        if (editText_1.getText().toString().equals(snapshot.child("PW").getValue())) {
+                        if (editText_1.getText().toString().equals(snapshot.child("PW").getValue().toString())) {
                             System.out.println("Log in!");
                             ID=editText_0.getText().toString();
                             

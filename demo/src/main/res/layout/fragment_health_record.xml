@@ -16,10 +16,8 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="500dp"
         android:text="New Text"
         android:id="@+id/return_record"
-        android:layout_below="@+id/button"
-        android:layout_toEndOf="@+id/button"
         android:layout_marginTop="154dp" />
 </RelativeLayout>
