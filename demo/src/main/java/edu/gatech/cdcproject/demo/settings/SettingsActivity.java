@@ -27,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
         setupUI();
     }
 
@@ -53,22 +54,18 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot != null) {
-                    System.out.println("Account exists!");
-                    if (snapshot.hasChild("PW")) {
-                        System.out.println("Has pw!");
-                        System.out.print(editText_1.getText().toString());
-                        System.out.print(snapshot.child("PW").getValue());
-                        if (editText_1.getText().toString().equals(snapshot.child("PW").getValue().toString())) {
-                            System.out.println("Log in!");
-                            ID=editText_0.getText().toString();
-                            
-                            Toast.makeText(getApplicationContext(),"Login in successful!", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
+                    if (editText_1.getText().toString().equals(snapshot.child("PW").getValue().toString())) {
+                        ID = editText_0.getText().toString();
+                        Toast.makeText(getApplicationContext(), "Hello, User " + ID, Toast.LENGTH_SHORT).show();
+                        finish();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"Wrong password.", Toast.LENGTH_SHORT).show();
                     }
                 }
+                else{
+                    Toast.makeText(getApplicationContext(),"Account does not exist.", Toast.LENGTH_SHORT).show();
+                }
             }
-
             @Override
             public void onCancelled(FirebaseError error) {
                 System.out.print("Cannot login");

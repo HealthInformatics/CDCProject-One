@@ -51,11 +51,8 @@ public class MainActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
 
         setContentView(R.layout.activity_main);
-
         setupNavDrawer();
-
         //switchFragment(new CommunityFragment(), getString(R.string.navdrawer_settings));
-
         startActivityWithParentStack(new Intent(this, SettingsActivity.class));
     }
 

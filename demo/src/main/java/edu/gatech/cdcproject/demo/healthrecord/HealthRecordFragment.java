@@ -1,67 +1,47 @@
 package edu.gatech.cdcproject.demo.healthrecord;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-
-import com.clarifai.api.RecognitionResult;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.primitive.DateDt;
-import ca.uhn.fhir.model.primitive.IdDt;
-import ca.uhn.fhir.rest.client.IGenericClient;
-import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
-
-
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.client.ClientProtocolException;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.methods.HttpGet;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
-import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
 import edu.gatech.cdcproject.demo.R;
-
-/**
- * Created by guoweidong on 3/28/16.
- *
- * Edited by CW
- *
- */
+import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 
 
 public class HealthRecordFragment extends Fragment {
     private Button hRecord;
-    private TextView textView;
-    public static String serverBase = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
+    private TextView hTextView;
+    //public static String serverBase = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
     @Nullable
     @Override
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_health_record, container, false);
-        textView=(TextView)view.findViewById(R.id.return_record);
+        hTextView = (TextView)view.findViewById(R.id.return_record);
         hRecord = (Button) view.findViewById(R.id.get_record);
-        textView.setText("hello");
+
+        if(SettingsActivity.ID != null){
+            hTextView.setText("Hello, User " + SettingsActivity.ID + ". To get your personal health information, please click \"retrive\" button.");
+            hRecord.setClickable(true);
+        }else {
+            hTextView.setText("To view personal health information, please log in.");
+            hRecord.setClickable(false);
+        }
 
         hRecord.setOnClickListener(
                 new View.OnClickListener() {
@@ -98,7 +78,7 @@ public class HealthRecordFragment extends Fragment {
                     */
 
 
-                /*String dataURL="http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/1142?_format=json";
+                String dataURL="http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/" + SettingsActivity.ID +"?_format=json";
 
                 new AsyncTask<String, Void, String>()
                 {
@@ -114,13 +94,17 @@ public class HealthRecordFragment extends Fragment {
                     }
                     @Override protected void onPostExecute(String result)
                     {
-                        textView.setText(result);
+                        JSONObject myJO;
+                        try {
+                            myJO = new JSONObject(result);
+                            String mResponse = myJO.getString("response");
+                            hTextView.setText(mResponse);
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                     }
-                }.execute(dataURL);*/
-
-
-
-
+                }.execute(dataURL);
             }
         });
 
@@ -131,13 +115,11 @@ public class HealthRecordFragment extends Fragment {
 
     private String sendGet(String url) throws Exception {
 
-
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         // optional default is GET
         con.setRequestMethod("GET");
-
 
         int responseCode = con.getResponseCode();
         System.out.println("\nSending 'GET' request to URL : " + url);
@@ -156,24 +138,6 @@ public class HealthRecordFragment extends Fragment {
         //print result
         System.out.println(response.toString());
         return response.toString();
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void setupUI() {
-
 
     }
 }
