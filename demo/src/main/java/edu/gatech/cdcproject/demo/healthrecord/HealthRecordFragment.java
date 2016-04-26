@@ -28,7 +28,12 @@ import java.net.URI;
 import java.net.URL;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.primitive.DateDt;
+import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.client.IGenericClient;
+import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+
+
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.client.ClientProtocolException;
 import cz.msebera.android.httpclient.client.HttpClient;
@@ -43,6 +48,8 @@ import edu.gatech.cdcproject.demo.R;
  * Edited by CW
  *
  */
+
+
 public class HealthRecordFragment extends Fragment {
     private Button hRecord;
     private TextView textView;
@@ -55,17 +62,43 @@ public class HealthRecordFragment extends Fragment {
         textView=(TextView)view.findViewById(R.id.return_record);
         hRecord = (Button) view.findViewById(R.id.get_record);
         textView.setText("hello");
+
         hRecord.setOnClickListener(
                 new View.OnClickListener() {
-            public void onClick(View v) {
-                //FhirContext ctx = new FhirContext();
-                //IGenericClient client = ctx.newRestfulGenericClient(serverBase);
+                public void onClick(View v) {
 
-                //Bundle bundle = client.search().forResource(Patient.class)
-                //        .where(Patient.In)
+                    // Create a client to talk to the HeathIntersections server
+                    /*FhirContext ctx = FhirContext.forDstu2();
+                    IGenericClient client = ctx.newRestfulGenericClient("http://fhir-dev.healthintersections.com.au/open");
+                    client.registerInterceptor(new LoggingInterceptor(true));
 
-                String dataURL="http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/1142?_format=json";
+                    // Create the input parameters to pass to the server
+                    Parameters inParams = new Parameters();
+                    inParams.addParameter().setName("start").setValue(new DateDt("2001-01-01"));
+                    inParams.addParameter().setName("end").setValue(new DateDt("2015-03-01"));
 
+                    // Invoke $everything on "Patient/1"
+                    Policy.Parameters outParams = client
+                            .operation()
+                            .onInstance(new IdDt("Patient", "1"))
+                            .named("$everything")
+                            .withParameters(inParams)
+                            .execute();
+
+                        *
+                     * Note that the $everything operation returns a Bundle instead
+                     * of a Parameters resource. The client operation methods return a
+                     * Parameters instance however, so HAPI creates a Parameters object
+                     * with a single parameter containing the value.
+                     *
+                    Bundle responseBundle = (Bundle) outParams.getParameter().get(0).getResource();
+
+                    // Print the response bundle
+                    System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(responseBundle));
+                    */
+
+
+                /*String dataURL="http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/1142?_format=json";
 
                 new AsyncTask<String, Void, String>()
                 {
@@ -83,7 +116,7 @@ public class HealthRecordFragment extends Fragment {
                     {
                         textView.setText(result);
                     }
-                }.execute(dataURL);
+                }.execute(dataURL);*/
 
 
 
