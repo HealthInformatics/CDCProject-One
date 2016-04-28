@@ -1,7 +1,6 @@
 package edu.gatech.cdcproject.demo.healthrecord;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +17,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.dstu2.resource.Bundle;
+import ca.uhn.fhir.model.dstu2.resource.Parameters;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.primitive.DateDt;
+import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.IGenericClient;
+import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 
@@ -25,9 +33,7 @@ import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 public class HealthRecordFragment extends Fragment {
     private Button hRecord;
     private TextView hTextView;
-    //public static String serverBase = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
-    @Nullable
-    @Override
+    public String serverBase = "http://52.72.172.54:8080/fhir/baseDstu2";
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -48,36 +54,20 @@ public class HealthRecordFragment extends Fragment {
                 public void onClick(View v) {
 
                     // Create a client to talk to the HeathIntersections server
-                    /*FhirContext ctx = FhirContext.forDstu2();
-                    IGenericClient client = ctx.newRestfulGenericClient("http://fhir-dev.healthintersections.com.au/open");
+                    FhirContext ctx = FhirContext.forDstu2();
+                    IGenericClient client = ctx.newRestfulGenericClient(serverBase);
                     client.registerInterceptor(new LoggingInterceptor(true));
 
-                    // Create the input parameters to pass to the server
-                    Parameters inParams = new Parameters();
-                    inParams.addParameter().setName("start").setValue(new DateDt("2001-01-01"));
-                    inParams.addParameter().setName("end").setValue(new DateDt("2015-03-01"));
-
-                    // Invoke $everything on "Patient/1"
-                    Policy.Parameters outParams = client
-                            .operation()
-                            .onInstance(new IdDt("Patient", "1"))
-                            .named("$everything")
-                            .withParameters(inParams)
+                    Bundle results = client
+                            .search()
+                            .forResource(Patient.class)
+                            .where(Patient.FAMILY.matches().value("duck"))
+                            .returnBundle(ca.uhn.fhir.model.dstu2.resource.Bundle.class)
                             .execute();
 
-                        *
-                     * Note that the $everything operation returns a Bundle instead
-                     * of a Parameters resource. The client operation methods return a
-                     * Parameters instance however, so HAPI creates a Parameters object
-                     * with a single parameter containing the value.
-                     *
-                    Bundle responseBundle = (Bundle) outParams.getParameter().get(0).getResource();
+                    System.out.println("Found " + results.getEntry().size() + " patients named 'duck'");
 
-                    // Print the response bundle
-                    System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(responseBundle));
-                    */
-
-                    /*Patient patient = new Patient();
+                    Patient patient = new Patient();
                     // ..populate the patient object..
                     patient.addIdentifier().setSystem("urn:system").setValue("12345");
                     patient.addName().addFamily("Smith").addGiven("John");
@@ -97,7 +87,7 @@ public class HealthRecordFragment extends Fragment {
                     // any of these things were provided by the server! They may not
                     // always be)
                     IdDt id = (IdDt) outcome.getId();
-                    System.out.println("Got ID: " + id.getValue());*/
+                    System.out.println("Got ID: " + id.getValue());
 
 
                 String dataURL="http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/" + SettingsActivity.ID +"?_format=json";
