@@ -37,6 +37,7 @@ public class HealthRecordFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        System.out.println("onCreate!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         View view = inflater.inflate(R.layout.fragment_health_record, container, false);
         hTextView = (TextView)view.findViewById(R.id.return_record);
         hRecord = (Button) view.findViewById(R.id.get_record);
@@ -52,7 +53,7 @@ public class HealthRecordFragment extends Fragment {
         hRecord.setOnClickListener(
                 new View.OnClickListener() {
                 public void onClick(View v) {
-
+                    System.out.println("On Click!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     // Create a client to talk to the HeathIntersections server
                     FhirContext ctx = FhirContext.forDstu2();
                     IGenericClient client = ctx.newRestfulGenericClient(serverBase);

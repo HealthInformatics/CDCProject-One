@@ -23,13 +23,4 @@
         android:layout_toEndOf="@+id/get_record"
         android:layout_alignTop="@+id/get_record" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="155dp"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/get_record"
-        android:spinnerMode="dropdown" />
 </RelativeLayout>
