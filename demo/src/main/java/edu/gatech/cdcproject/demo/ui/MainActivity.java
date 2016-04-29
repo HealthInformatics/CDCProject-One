@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         setupNavDrawer();
-        //switchFragment(new CommunityFragment(), getString(R.string.navdrawer_settings));
-        startActivityWithParentStack(new Intent(this, SettingsActivity.class));
+        switchFragment(new CommunityFragment(), getString(R.string.navdrawer_settings));
+        //startActivityWithParentStack(new Intent(this, SettingsActivity.class));
     }
 
     @Override
@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
             switchFragment(new FoodIdentifyFragment(), getString(R.string.navdrawer_foodidentify));
         } else if(itemId == getInteger(R.integer.navdrawer_healthrecord)) {
             toolbar.setTitle(R.string.navdrawer_healthrecord);
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clickmain");
             switchFragment(new HealthRecordFragment(), getString(R.string.navdrawer_healthrecord));
         } else if(itemId == getInteger(R.integer.navdrawer_settings)) {
             startActivityWithParentStack(new Intent(this, SettingsActivity.class));
