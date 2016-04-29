@@ -52,8 +52,15 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         setupNavDrawer();
-        switchFragment(new CommunityFragment(), getString(R.string.navdrawer_settings));
+        switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));
         //startActivityWithParentStack(new Intent(this, SettingsActivity.class));
+    }
+
+
+    protected void onResume(){
+        super.onResume();
+        toolbar.setTitle(R.string.navdrawer_community);
+        switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));
     }
 
     @Override
@@ -123,11 +130,11 @@ public class MainActivity extends AppCompatActivity {
             switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));
         } else if(itemId == getInteger(R.integer.navdrawer_foodidentify)) {
             toolbar.setTitle(R.string.navdrawer_foodidentify);
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clickmain");
+            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clickmain");
             switchFragment(new FoodIdentifyFragment(), getString(R.string.navdrawer_foodidentify));
         } else if(itemId == getInteger(R.integer.navdrawer_healthrecord)) {
             toolbar.setTitle(R.string.navdrawer_healthrecord);
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clickmain");
+            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clickmain");
             switchFragment(new HealthRecordFragment(), getString(R.string.navdrawer_healthrecord));
         } else if(itemId == getInteger(R.integer.navdrawer_settings)) {
             startActivityWithParentStack(new Intent(this, SettingsActivity.class));

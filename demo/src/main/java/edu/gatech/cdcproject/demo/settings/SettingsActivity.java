@@ -57,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
                     if (editText_1.getText().toString().equals(snapshot.child("PW").getValue().toString())) {
                         ID = editText_0.getText().toString();
                         Toast.makeText(getApplicationContext(), "Hello, User " + ID, Toast.LENGTH_SHORT).show();
-                        finish();
+                        SettingsActivity.this.onBackPressed();
                     }else{
                         Toast.makeText(getApplicationContext(),"Wrong password.", Toast.LENGTH_SHORT).show();
                     }
@@ -68,7 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(FirebaseError error) {
-                System.out.print("Cannot login");
+                Toast.makeText(getApplicationContext(),"Cannot log in.", Toast.LENGTH_SHORT).show();
             }
         });
     }
