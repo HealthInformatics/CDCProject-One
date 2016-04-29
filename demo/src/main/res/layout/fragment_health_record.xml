@@ -23,6 +23,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/get_record"
-        android:layout_alignTop="@+id/get_record" />
+        android:layout_alignTop="@+id/get_record"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"/>
 
 </RelativeLayout>

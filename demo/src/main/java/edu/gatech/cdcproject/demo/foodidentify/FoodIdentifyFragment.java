@@ -69,6 +69,8 @@ public class FoodIdentifyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!CCCCCfod");
         View view = inflater.inflate(R.layout.fragment_food_identify, container, false);
 
         button_view=(ListView) view.findViewById(R.id.button_view);

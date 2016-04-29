@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class HealthRecordFragment extends Fragment {
         System.out.println("onCreate!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         View view = inflater.inflate(R.layout.fragment_health_record, container, false);
         hTextView = (TextView)view.findViewById(R.id.return_record);
+        hTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
         hRecord = (Button) view.findViewById(R.id.get_record);
 
         if(SettingsActivity.ID != null){

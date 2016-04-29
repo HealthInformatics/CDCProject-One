@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));
         } else if(itemId == getInteger(R.integer.navdrawer_foodidentify)) {
             toolbar.setTitle(R.string.navdrawer_foodidentify);
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clickmain");
             switchFragment(new FoodIdentifyFragment(), getString(R.string.navdrawer_foodidentify));
         } else if(itemId == getInteger(R.integer.navdrawer_healthrecord)) {
             toolbar.setTitle(R.string.navdrawer_healthrecord);
