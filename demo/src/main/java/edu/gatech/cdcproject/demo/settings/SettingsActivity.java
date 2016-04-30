@@ -26,10 +26,24 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-
-        setupUI();
+        if(ID == null){
+            setContentView(R.layout.activity_settings);
+            setupUI();
+        }else{
+            setContentView(R.layout.activity_settings_2);
+        }
     }
+
+    protected void onResume(){
+        super.onResume();
+        if(ID == null){
+            setContentView(R.layout.activity_settings);
+            setupUI();
+        }else{
+            setContentView(R.layout.activity_settings_2);
+        }
+    }
+
 
     private void setupUI() {
         // Toolbar

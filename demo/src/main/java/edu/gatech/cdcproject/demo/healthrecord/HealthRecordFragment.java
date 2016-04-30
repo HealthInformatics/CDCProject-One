@@ -2,9 +2,12 @@ package edu.gatech.cdcproject.demo.healthrecord;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
+import android.util.JsonReader;
+import android.util.JsonToken;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +18,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.uhn.fhir.context.FhirContext;
 //import ca.uhn.fhir.model.dstu2.resource.Bundle;
@@ -37,9 +44,18 @@ public class HealthRecordFragment extends Fragment {
     private TextView hTextView;
     public String serverBase = "http://52.72.172.54:8080/fhir/baseDstu2";
 
+    public void onResume(){
+        if(SettingsActivity.ID != null){
+            hTextView.setText("Hello, User " + SettingsActivity.ID + ". To get your personal health information, please click \"retrive\" button.");
+            hRecord.setClickable(true);
+        }else {
+            hTextView.setText("To view personal health information, please log in.");
+            hRecord.setClickable(false);
+        }
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //System.out.println("onCreate!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         View view = inflater.inflate(R.layout.fragment_health_record, container, false);
         hTextView = (TextView)view.findViewById(R.id.return_record);
         hTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -55,39 +71,35 @@ public class HealthRecordFragment extends Fragment {
 
         hRecord.setOnClickListener(
                 new View.OnClickListener() {
-                public void onClick(View v) {
-                    //System.out.println("On Click!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-                    String dataURL="http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/" + SettingsActivity.ID +"?_format=json";
-
-                    new AsyncTask<String, Void, String>()
-                    {
-                        @Override protected String doInBackground(String... dataurls)
-                        {
-                            try {
-                                return sendGet(dataurls[0]);
+                    public void onClick(View v) {
+                        String dataURL = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/" + SettingsActivity.ID + "?_format=json";
+                        new AsyncTask<String, Void, String>() {
+                            @Override
+                            protected String doInBackground(String... dataurls) {
+                                try {
+                                    return sendGet(dataurls[0]);
+                                } catch (Exception e) {
+                                    return "error " + e.getMessage();
+                                }
                             }
-                            catch(Exception e)
-                            {
-                                return "error "+e.getMessage();
-                            }
-                        }
-                        @Override protected void onPostExecute(String result)
-                        {
-                            JSONObject myJO;
-                            try {
-                                myJO = new JSONObject(result);
-                                //String mResponse = myJO.getString("response");
-                                hTextView.setText(myJO.toString());
-                            } catch (JSONException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-                        }
-                    }.execute(dataURL);
-            }
-        });
 
+                            @Override
+                            protected void onPostExecute(String result) {
+                                JSONObject myJO;
+                                try {
+                                    myJO = new JSONObject(result);
+
+
+                                    //String mResponse = myJO.getString("response");
+                                    hTextView.setText(myJO.toString());
+                                } catch (JSONException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.execute(dataURL);
+                    }
+                });
         return view;
     }
 
@@ -120,4 +132,5 @@ public class HealthRecordFragment extends Fragment {
         return response.toString();
 
     }
+
 }
