@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import edu.gatech.cdcproject.backend.myApi.model.FoodImage;
 import edu.gatech.cdcproject.demo.BuildConfig;
 import edu.gatech.cdcproject.demo.R;
+import edu.gatech.cdcproject.demo.community.CommunityFragment;
 
 /**
  * Created by guoweidong on 3/28/16.
@@ -53,10 +55,10 @@ public class FoodIdentifyFragment extends Fragment {
 
     private final ClarifaiClient client = new ClarifaiClient(BuildConfig.CLARIFAI_CLIENT_ID,
             BuildConfig.CLARIFAI_CLIENT_SECRET);
-    private Button selectButton;
-    private Button cameraButton;
-    private Button confirmButton;
-    private Button enterTextButton;
+    private ImageButton selectButton;
+    private ImageButton cameraButton;
+    private ImageButton confirmButton;
+    private ImageButton enterTextButton;
     private ImageView imageView;
 
     //private LinearLayout button_view;
@@ -77,10 +79,10 @@ public class FoodIdentifyFragment extends Fragment {
 
 
         imageView = (ImageView) view.findViewById(R.id.image_view);
-        selectButton = (Button) view.findViewById(R.id.select_button);
-        cameraButton=(Button) view.findViewById(R.id.camera_button);
-        confirmButton=(Button) view.findViewById(R.id.confirm_button);
-        enterTextButton=(Button) view.findViewById(R.id.popup_menu);
+        selectButton = (ImageButton) view.findViewById(R.id.select_button);
+        cameraButton=(ImageButton) view.findViewById(R.id.camera_button);
+        confirmButton=(ImageButton) view.findViewById(R.id.confirm_button);
+        enterTextButton=(ImageButton) view.findViewById(R.id.popup_menu);
         adapter = new ArrayAdapter<String>(getContext(), R.layout.activity_listview,food);
         button_view.setAdapter(adapter);
         button_view.setOnItemClickListener(
@@ -151,13 +153,12 @@ public class FoodIdentifyFragment extends Fragment {
             public void onClick(DialogInterface dialog, int whichButton) {
 
                 String enter_value = edittext.getText().toString();
-                if(!Check_Appear(enter_value)) {
+                if (!Check_Appear(enter_value)) {
 
                     food.add(0, enter_value.toLowerCase());
                     adapter.notifyDataSetChanged();
 
-                }
-                else
+                } else
                     Toast.makeText(getContext(), "Already exists", Toast.LENGTH_SHORT).show();
             }
         });
@@ -317,7 +318,7 @@ public class FoodIdentifyFragment extends Fragment {
                     food.add(0,t.getName().toLowerCase());
                     adapter.notifyDataSetChanged();
                 }
-                Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
             }
             else
             {

@@ -10,6 +10,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
@@ -30,7 +31,8 @@ import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 public class BMI extends Fragment
 {
 
-    private Button calculate;
+    private ImageButton calculate;
+    private ImageButton upload;
     private TextView result;
     private EditText weight;
     private EditText height;
@@ -48,7 +50,8 @@ public class BMI extends Fragment
         weight = (EditText) view.findViewById(R.id.input_weight);
         height = (EditText) view.findViewById(R.id.input_height);
         result=(TextView) view.findViewById(R.id.result);
-        calculate = (Button) view.findViewById(R.id.calculate);
+        calculate = (ImageButton) view.findViewById(R.id.calculate);
+        upload=(ImageButton) view.findViewById(R.id.upload);
 
         calculate.setOnClickListener(
                 new View.OnClickListener()
@@ -57,7 +60,16 @@ public class BMI extends Fragment
                     public void onClick(View v)
                     {
                         cal_BMI();
+                    }
+                }
+        );
 
+
+        upload.setOnClickListener(
+                new View.OnClickListener()
+                {
+                    public void onClick(View v)
+                    {
                         Calendar cal = Calendar.getInstance();
                         String date=""+cal.getTime();
 
