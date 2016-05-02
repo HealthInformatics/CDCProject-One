@@ -90,8 +90,6 @@ public class HealthRecordFragment extends Fragment {
                                 JSONObject myJO;
                                 try {
                                     myJO = new JSONObject(result);
-
-
                                     //String mResponse = myJO.getString("response");
                                     hTextView.setText(myJO.toString());
                                 } catch (JSONException e) {
@@ -134,5 +132,4 @@ public class HealthRecordFragment extends Fragment {
         return response.toString();
 
     }
-
 }

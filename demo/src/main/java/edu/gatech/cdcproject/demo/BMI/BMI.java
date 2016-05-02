@@ -32,6 +32,7 @@ import edu.gatech.cdcproject.demo.BuildConfig;
 import edu.gatech.cdcproject.demo.community.CommunityFragment;
 import edu.gatech.cdcproject.demo.foodidentify.confirm_page;
 import edu.gatech.cdcproject.demo.settings.SettingsActivity;
+import edu.gatech.cdcproject.demo.ui.MainActivity;
 
 public class BMI extends Fragment
 {
@@ -66,7 +67,9 @@ public class BMI extends Fragment
                     @Override
                     public void onClick(View v)
                     {
-                        cal_BMI();
+                        if(weight.getText() != null && height.getText() != null) {
+                            cal_BMI();
+                        }
                     }
                 }
         );
@@ -88,12 +91,11 @@ public class BMI extends Fragment
                         if(SettingsActivity.ID!=null) {
                             SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("BMI").child(date).setValue(result_value);
 
+                            //设置title，现在是调用的static方法
+                            MainActivity.setToolbar(1);
                             Fragment fragment = new CommunityFragment();
-
                             FragmentManager fragmentManager = getFragmentManager();
-
                             fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
-
                         }
                         else {
                             //Toast.makeText(getContext(), "Please login in first", Toast.LENGTH_SHORT).show();

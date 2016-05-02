@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = makeLogTag(MainActivity.class);
 
-    private Toolbar toolbar;
+    private static Toolbar toolbar;
 
     private Drawer drawer;
 
@@ -52,11 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         setupNavDrawer();
+        toolbar.setTitle(R.string.navdrawer_community);
         switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));
         //startActivityWithParentStack(new Intent(this, SettingsActivity.class));
     }
 
-
+    public static void setToolbar(int i){
+        if(i == 1)         toolbar.setTitle(R.string.navdrawer_community);
+    }
 /*
     protected void onResume(){
         super.onResume();

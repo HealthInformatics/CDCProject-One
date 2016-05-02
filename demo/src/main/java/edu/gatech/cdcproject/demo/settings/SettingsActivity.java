@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -17,12 +18,17 @@ import edu.gatech.cdcproject.demo.R;
 
 
 
+
 public class SettingsActivity extends AppCompatActivity {
     private Button logInButton;
     public static Firebase myFirebaseRef= new Firebase("https://sizzling-fire-2230.firebaseio.com/");;
     public static String ID;
     private EditText editText_0;
     private EditText editText_1;
+
+    private TextView healthInfo;
+    private Button logOutBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +37,24 @@ public class SettingsActivity extends AppCompatActivity {
             setupUI();
         }else{
             setContentView(R.layout.activity_settings_2);
+            setupUI_2();
         }
+    }
+
+    private void setupUI_2() {
+        // Toolbar
+        healthInfo = (TextView) findViewById(R.id.textView);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Settings");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingsActivity.this.onBackPressed();
+            }
+        });
+        logOutBtn = (Button) findViewById(R.id.button);
     }
 
     /*
@@ -62,6 +85,15 @@ public class SettingsActivity extends AppCompatActivity {
         });
         logInButton = (Button) findViewById(R.id.loginBt);
     }
+
+    public void myLogout(View v){
+        ID = null;
+        Toast.makeText(getApplicationContext(),"Successfully log out.", Toast.LENGTH_SHORT).show();
+        finish();
+        //这里log out之后结束，就要求在别的fragment中加入re-layout的功能，比如 onResume（）
+    }
+
+
 
     public void myLogin(View v){
 
