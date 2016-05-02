@@ -57,11 +57,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+/*
     protected void onResume(){
         super.onResume();
         toolbar.setTitle(R.string.navdrawer_community);
         switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));
     }
+*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode,

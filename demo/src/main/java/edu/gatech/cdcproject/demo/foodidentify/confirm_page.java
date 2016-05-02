@@ -3,6 +3,8 @@ package edu.gatech.cdcproject.demo.foodidentify;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -27,6 +29,7 @@ import java.util.TimeZone;
 
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.about.AboutActivity;
+import edu.gatech.cdcproject.demo.community.CommunityFragment;
 import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 
 public class confirm_page extends AppCompatActivity {
@@ -97,9 +100,12 @@ public class confirm_page extends AppCompatActivity {
 
                         if(SettingsActivity.ID!=null)
                             SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("food").child(date).setValue(data);
-                        else
-                            Toast.makeText(getApplicationContext(), "Please login in first", Toast.LENGTH_SHORT).show();
+                        else {
+                            Intent login_activity = new Intent(getApplicationContext(), SettingsActivity.class);
+                            startActivity(login_activity);
+                        }
                         finish();
+
                     }
                 }
         );

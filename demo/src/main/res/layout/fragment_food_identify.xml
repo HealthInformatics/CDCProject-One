@@ -5,13 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/white"
     tools:context=".RecognitionActivity">
 
     <ImageView
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:scaleType="centerCrop" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY" />
 
 
 
@@ -27,8 +29,8 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        >
+        android:layout_gravity="center_horizontal">
+
         <ImageButton
             android:id="@+id/select_button"
             android:layout_width="50dp"
@@ -57,5 +59,7 @@
             android:id="@+id/confirm_button"
             android:scaleType="fitCenter"
             android:src="@drawable/confirm" />
+
     </LinearLayout>
+
 </LinearLayout>

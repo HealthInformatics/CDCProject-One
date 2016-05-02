@@ -44,6 +44,7 @@ public class HealthRecordFragment extends Fragment {
     private TextView hTextView;
     public String serverBase = "http://52.72.172.54:8080/fhir/baseDstu2";
 
+    /*
     public void onResume(){
         if(SettingsActivity.ID != null){
             hTextView.setText("Hello, User " + SettingsActivity.ID + ". To get your personal health information, please click \"retrive\" button.");
@@ -53,6 +54,7 @@ public class HealthRecordFragment extends Fragment {
             hRecord.setClickable(false);
         }
     }
+    */
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

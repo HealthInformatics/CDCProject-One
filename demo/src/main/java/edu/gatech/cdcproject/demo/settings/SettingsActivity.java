@@ -34,6 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    /*
     protected void onResume(){
         super.onResume();
         if(ID == null){
@@ -43,7 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
             setContentView(R.layout.activity_settings_2);
         }
     }
-
+*/
 
     private void setupUI() {
         // Toolbar
@@ -71,7 +72,8 @@ public class SettingsActivity extends AppCompatActivity {
                     if (editText_1.getText().toString().equals(snapshot.child("PW").getValue().toString())) {
                         ID = editText_0.getText().toString();
                         Toast.makeText(getApplicationContext(), "Hello, User " + ID, Toast.LENGTH_SHORT).show();
-                        SettingsActivity.this.onBackPressed();
+                        //SettingsActivity.this.onBackPressed();
+                        finish();
                     }else{
                         Toast.makeText(getApplicationContext(),"Wrong password.", Toast.LENGTH_SHORT).show();
                     }

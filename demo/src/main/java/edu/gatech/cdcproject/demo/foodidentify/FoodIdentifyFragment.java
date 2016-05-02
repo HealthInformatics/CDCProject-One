@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Credentials;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -79,6 +81,9 @@ public class FoodIdentifyFragment extends Fragment {
 
 
         imageView = (ImageView) view.findViewById(R.id.image_view);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView.setImageResource(R.drawable.food);
+
         selectButton = (ImageButton) view.findViewById(R.id.select_button);
         cameraButton=(ImageButton) view.findViewById(R.id.camera_button);
         confirmButton=(ImageButton) view.findViewById(R.id.confirm_button);
@@ -212,33 +217,36 @@ public class FoodIdentifyFragment extends Fragment {
             // The user picked an image. Send it to Clarifai for recognition.
             Log.d(TAG, "User picked image: " + intent.getData());
             Bitmap bitmap = loadBitmapFromUri(intent.getData());
-            if (bitmap != null)
-            {
-                imageView.setImageBitmap(bitmap);
-                Toast.makeText(getContext(),"Recognizing...",Toast.LENGTH_SHORT).show();
-                selectButton.setEnabled(false);
 
-                // Run recognition on a background thread since it makes a network call.
-                new AsyncTask<Bitmap, Void, RecognitionResult>()
-                {
-                    @Override protected RecognitionResult doInBackground(Bitmap... bitmaps)
-                    {
-                        RecognitionResult result= recognizeBitmap(bitmaps[0]);
-                        return result;
-                    }
-                    @Override protected void onPostExecute(RecognitionResult result)
-                    {
-                        updateUIForResult(result);
-                    }
-                }.execute(bitmap);
-            } else {
-                Toast.makeText(getContext(),"Unable to load selected image.",Toast.LENGTH_LONG).show();
-            }
+                if (bitmap != null) {
+                    imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    imageView.setImageBitmap(bitmap);
+                    Toast.makeText(getContext(), "Recognizing...", Toast.LENGTH_SHORT).show();
+                    selectButton.setEnabled(false);
+
+                    // Run recognition on a background thread since it makes a network call.
+                    new AsyncTask<Bitmap, Void, RecognitionResult>() {
+                        @Override
+                        protected RecognitionResult doInBackground(Bitmap... bitmaps) {
+                            RecognitionResult result = recognizeBitmap(bitmaps[0]);
+                            return result;
+                        }
+
+                        @Override
+                        protected void onPostExecute(RecognitionResult result) {
+                            updateUIForResult(result);
+                        }
+                    }.execute(bitmap);
+                } else {
+                    Toast.makeText(getContext(), "Unable to load selected image.", Toast.LENGTH_LONG).show();
+                }
+
         }
         else if(requestCode==CODE_CAM&&resultCode==Activity.RESULT_OK)
         {
             Bitmap bp=(Bitmap) intent.getExtras().get("data");
             if(bp!=null) {
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 imageView.setImageBitmap(bp);
                 Toast.makeText(getContext(), "Recognizing...", Toast.LENGTH_SHORT).show();
                 cameraButton.setEnabled(false);

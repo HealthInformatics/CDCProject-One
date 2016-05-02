@@ -6,6 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/white"
     tools:context=".BMI">
 
     <EditText
@@ -72,23 +73,29 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="50dp"
         android:text=""
         android:gravity="center"
         android:id="@+id/result"
         android:layout_below="@+id/input_height"
         android:layout_alignParentEnd="true" />
 
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_below="@+id/result"
+        android:scaleType="fitCenter"
+        android:id="@+id/suggestion"/>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center_horizontal"
-        android:layout_below="@+id/result"
-        android:layout_alignEnd="@+id/result"
-        android:layout_alignParentBottom="true">
+        android:layout_below="@+id/suggestion"
+        android:layout_alignEnd="@+id/suggestion"
+        android:layout_alignParentBottom="true"
+        android:weightSum="1">
 
 
         <ImageButton
@@ -99,6 +106,8 @@
             android:id="@+id/upload"
             android:gravity="center_horizontal"
             android:layout_gravity="bottom"/>
+
+
 
         <ImageButton
             android:layout_width="50dp"
@@ -112,5 +121,7 @@
 
 
     </LinearLayout>
+
+
 
 </RelativeLayout>

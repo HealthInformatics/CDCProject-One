@@ -1,7 +1,9 @@
 package edu.gatech.cdcproject.demo.BMI;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
@@ -26,6 +29,8 @@ import java.util.Map;
 
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.BuildConfig;
+import edu.gatech.cdcproject.demo.community.CommunityFragment;
+import edu.gatech.cdcproject.demo.foodidentify.confirm_page;
 import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 
 public class BMI extends Fragment
@@ -41,6 +46,7 @@ public class BMI extends Fragment
     private boolean isKg=false;
     private boolean isM=true;
     private float BMI_value;
+    private ImageView imageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -52,6 +58,7 @@ public class BMI extends Fragment
         result=(TextView) view.findViewById(R.id.result);
         calculate = (ImageButton) view.findViewById(R.id.calculate);
         upload=(ImageButton) view.findViewById(R.id.upload);
+        imageView=(ImageView) view.findViewById(R.id.suggestion);
 
         calculate.setOnClickListener(
                 new View.OnClickListener()
@@ -78,10 +85,21 @@ public class BMI extends Fragment
                         result_value.put("Weight",weight.getText().toString()+weight_spinner.getSelectedItem());
                         result_value.put("BMI", Float.toString(BMI_value));
 
-                        if(SettingsActivity.ID!=null)
+                        if(SettingsActivity.ID!=null) {
                             SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("BMI").child(date).setValue(result_value);
-                        else
-                            Toast.makeText(getContext(), "Please login in first", Toast.LENGTH_SHORT).show();
+
+                            Fragment fragment = new CommunityFragment();
+
+                            FragmentManager fragmentManager = getFragmentManager();
+
+                            fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
+
+                        }
+                        else {
+                            //Toast.makeText(getContext(), "Please login in first", Toast.LENGTH_SHORT).show();
+                            Intent login_activity = new Intent(getActivity(), SettingsActivity.class);
+                            startActivity(login_activity);
+                        }
                     }
                 }
         );
@@ -154,14 +172,21 @@ public class BMI extends Fragment
         float f_r=f_w/(f_h*f_h);
         BMI_value=f_r;
         String res=Float.toString(f_r);
-        if(f_r<18.5)
-            res+="\nYou are too thin! EAT EAT EAT";
-        else if(f_r<24.9)
-            res+="\nYou are good! Keep working";
-        else if(f_r<29.9)
-            res+="\nDude, you are overweight! You need some self control";
-        else
-            res+="\nOMG, you are so fat!";
+        if(f_r<18.5) {
+            res += "\nUnderweight\n";
+        }
+        else if(f_r<24.9) {
+            res += "\nHealthy Weight\n";
+        }
+        else if(f_r<29.9) {
+            res += "\nOverweight\n";
+            imageView.setImageResource(R.drawable.workout_food);
+        }
+        else {
+            res += "\nObese\n";
+            imageView.setImageResource(R.drawable.workout_food);
+
+        }
 
         result.setText(res);
     }
