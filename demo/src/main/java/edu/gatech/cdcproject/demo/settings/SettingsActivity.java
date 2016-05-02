@@ -29,6 +29,31 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView healthInfo;
     private Button logOutBtn;
 
+    protected ValueEventListener myVEListenner = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            if (snapshot != null) {
+                if (editText_1.getText().toString().equals(snapshot.child("PW").getValue().toString())) {
+                    ID = editText_0.getText().toString();
+                    Toast.makeText(getApplicationContext(), "Hello, User " + ID, Toast.LENGTH_SHORT).show();
+                    //SettingsActivity.this.onBackPressed();
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(),"Wrong password.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else{
+                Toast.makeText(getApplicationContext(),"Account does not exist.", Toast.LENGTH_SHORT).show();
+            }
+        }
+        @Override
+        public void onCancelled(FirebaseError error) {
+            Toast.makeText(getApplicationContext(),"Cannot log in.", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +64,12 @@ public class SettingsActivity extends AppCompatActivity {
             setContentView(R.layout.activity_settings_2);
             setupUI_2();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(ID != null)        myFirebaseRef.child(ID+"").removeEventListener(myVEListenner);
     }
 
     private void setupUI_2() {
@@ -56,18 +87,6 @@ public class SettingsActivity extends AppCompatActivity {
         });
         logOutBtn = (Button) findViewById(R.id.button);
     }
-
-    /*
-    protected void onResume(){
-        super.onResume();
-        if(ID == null){
-            setContentView(R.layout.activity_settings);
-            setupUI();
-        }else{
-            setContentView(R.layout.activity_settings_2);
-        }
-    }
-*/
 
     private void setupUI() {
         // Toolbar
@@ -96,29 +115,31 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     public void myLogin(View v){
-
-        myFirebaseRef.child(editText_0.getText().toString()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot != null) {
-                    if (editText_1.getText().toString().equals(snapshot.child("PW").getValue().toString())) {
-                        ID = editText_0.getText().toString();
-                        Toast.makeText(getApplicationContext(), "Hello, User " + ID, Toast.LENGTH_SHORT).show();
-                        //SettingsActivity.this.onBackPressed();
-                        finish();
-                    }else{
-                        Toast.makeText(getApplicationContext(),"Wrong password.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"Account does not exist.", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onCancelled(FirebaseError error) {
-                Toast.makeText(getApplicationContext(),"Cannot log in.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        myFirebaseRef.child(editText_0.getText().toString()).addValueEventListener(myVEListenner);
     }
 
+
+
+/*
+    {    "resourceType":"Patient",
+            "id":"88",
+            "text":{
+        "status":"generated",
+                "div":"<div><div class=\"hapiHeaderText\"> Thaddeus E <b>HAYNES </b></div><table class=\"hapiPropertyTable\"><tbody><tr><td>Address</td><td><span>668 Laura Circle </span><br /><span></span><br /><span>Atlanta </span><span>GA </span></td></tr><tr><td>Date of birth</td><td><span>15 October 1966</span></td></tr></tbody></table></div>"    },
+        "active":true,
+            "name":[
+        {            "family":[
+            "Haynes"            ],
+            "given":[
+            "Thaddeus",
+                    "E"            ]        }    ],
+        "gender":"male",    "birthDate":"1966-10-15",
+            "address":[        {            "use":"home",
+            "line":[                "668 Laura Circle"
+        ],            "city":"Atlanta",
+                "state":"GA",
+                "postalCode":"30301"        }    ]}
+    */
+
 }
+

@@ -67,7 +67,7 @@ public class BMI extends Fragment
                     @Override
                     public void onClick(View v)
                     {
-                        if(weight.getText() != null && height.getText() != null) {
+                        if(weight.getText().toString() != null && height.getText().toString() != null) {
                             cal_BMI();
                         }
                     }
@@ -165,8 +165,17 @@ public class BMI extends Fragment
     {
         String w = weight.getText().toString();
         String h= height.getText().toString();
-        float f_w = Float.parseFloat(w);
-        float f_h=Float.parseFloat(h);
+        float f_w;
+        float f_h;
+        try{
+            f_w = Float.parseFloat(w);
+            f_h = Float.parseFloat(h);
+        }catch(Exception e){
+            Toast.makeText(getActivity(),"Miss data.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         if(!isKg)
             f_w=((float)0.453592)*f_w;
         if(!isM)
@@ -192,8 +201,4 @@ public class BMI extends Fragment
 
         result.setText(res);
     }
-
-
-
-
 }
