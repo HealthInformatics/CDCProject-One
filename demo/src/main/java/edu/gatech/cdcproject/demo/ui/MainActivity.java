@@ -1,6 +1,7 @@
 package edu.gatech.cdcproject.demo.ui;
 
 import android.Manifest;
+import android.app.FragmentTransaction;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static Toolbar toolbar;
 
+    private static boolean refresh=false;
+
     private Drawer drawer;
 
     public static int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
@@ -68,13 +71,20 @@ public class MainActivity extends AppCompatActivity {
     public static void setToolbar(int i){
         if(i == 1)         toolbar.setTitle(R.string.navdrawer_community);
     }
-/*
+
     protected void onResume(){
         super.onResume();
-        toolbar.setTitle(R.string.navdrawer_community);
-        switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));
+        if(refresh) {
+            refresh=false;
+            switchFragment(new FoodIdentifyFragment(), getString(R.string.navdrawer_foodidentify));
+        }
+
     }
-*/
+    public static void setRefresh(boolean input)
+    {
+        refresh=input;
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,

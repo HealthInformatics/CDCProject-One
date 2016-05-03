@@ -16,6 +16,7 @@
         android:layout_height="415dp"
         android:scrollbars="vertical"
         android:id="@+id/result_view"
+        android:textSize="20dp"
         android:layout_gravity="center_horizontal" />
 
     <LinearLayout
@@ -29,21 +30,24 @@
             android:layout_height="wrap_content"
             android:text="Fruits and veggies"
             android:id="@+id/fruit_and_veggie"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:layout_gravity="left" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sweet drink"
             android:id="@+id/sweet_drink"
-            android:textSize="15dp"/>
+            android:textSize="15dp"
+            android:layout_gravity="left" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="100% fruit drink"
             android:id="@+id/fruit_drink"
-            android:textSize="15dp"/>
+            android:textSize="15dp"
+            android:layout_gravity="left|center" />
     </LinearLayout>
 
 

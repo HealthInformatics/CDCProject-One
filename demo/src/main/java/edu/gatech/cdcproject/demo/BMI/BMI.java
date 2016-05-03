@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
@@ -48,6 +49,7 @@ public class BMI extends Fragment
     private boolean isM=true;
     private float BMI_value;
     private ImageView imageView;
+    private ProgressBar wait_bar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -59,7 +61,12 @@ public class BMI extends Fragment
         result=(TextView) view.findViewById(R.id.result);
         calculate = (ImageButton) view.findViewById(R.id.calculate);
         upload=(ImageButton) view.findViewById(R.id.upload);
+
+        wait_bar=(ProgressBar) view.findViewById(R.id.progressBar2);
+
         imageView=(ImageView) view.findViewById(R.id.suggestion);
+
+        imageView.setImageResource(R.drawable.bmichart);
 
         calculate.setOnClickListener(
                 new View.OnClickListener()
@@ -92,8 +99,8 @@ public class BMI extends Fragment
                             SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("BMI").child(date).setValue(result_value);
 
                             //设置title，现在是调用的static方法
-                            MainActivity.setToolbar(1);
-                            Fragment fragment = new CommunityFragment();
+                            //MainActivity.setToolbar(1);//no need to change title anymore. Refresh page and stay in current page
+                            Fragment fragment = new BMI();
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
                         }
@@ -182,9 +189,11 @@ public class BMI extends Fragment
         String res=Float.toString(f_r);
         if(f_r<18.5) {
             res += "\nUnderweight\n";
+            imageView.setImageResource(R.drawable.highcalories);
         }
         else if(f_r<24.9) {
             res += "\nHealthy Weight\n";
+            imageView.setImageResource(R.drawable.keepgoing1);
         }
         else if(f_r<29.9) {
             res += "\nOverweight\n";
@@ -193,7 +202,6 @@ public class BMI extends Fragment
         else {
             res += "\nObese\n";
             imageView.setImageResource(R.drawable.workout_food);
-
         }
 
         result.setText(res);
