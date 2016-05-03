@@ -5,6 +5,7 @@ import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -51,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
 
         setContentView(R.layout.activity_main);
+
+        //为了在main进程中使用网络（禁止是为了防阻塞），或者用线程走HTTP
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         setupNavDrawer();
         toolbar.setTitle(R.string.navdrawer_community);
         switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));

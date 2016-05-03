@@ -74,7 +74,7 @@ public class BMI extends Fragment
                 }
         );
 
-
+        // GT fhir  Observation 30 是关于BMI的
         upload.setOnClickListener(
                 new View.OnClickListener()
                 {
@@ -132,12 +132,10 @@ public class BMI extends Fragment
                             isM=true;
                         else
                             isM=false;
-
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
-
                     }
                 }
         );
@@ -157,7 +155,6 @@ public class BMI extends Fragment
                     }
                 }
         );
-
         return view;
     }
 
