@@ -56,7 +56,7 @@ public class HealthRecordFragment extends Fragment {
     private Spinner myPALevelSpinner;
     private int isHPLA = 0;
     //String[] myPALevel = {"High-level", "Low-level"};
-    public String serverBase = "http://52.72.172.54:8080/fhir/baseDstu2";
+    public String myServerBase = "http://52.72.172.54:8080/fhir/baseDstu2";
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -133,9 +133,9 @@ public class HealthRecordFragment extends Fragment {
                     public void onClick(View v) {
                         // We're connecting to a DSTU1 compliant server in this example
                         FhirContext ctx = FhirContext.forDstu2();
-                        String serverBase = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
+                        //String serverBase = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
 
-                        IGenericClient client = ctx.newRestfulGenericClient(serverBase);
+                        IGenericClient client = ctx.newRestfulGenericClient(myServerBase);
 
                         /*ca.uhn.fhir.model.dstu2.resource.Bundle results = client
                                 .search()
