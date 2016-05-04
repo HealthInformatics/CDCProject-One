@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/fruitpic3"
     android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
@@ -22,7 +23,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:id="@+id/imageView"
-        android:src="@android:drawable/ic_menu_crop"
+        android:src="@drawable/user"
+        android:scaleType="fitXY"
         android:layout_below="@+id/toolbar"
         android:layout_alignParentStart="true" />
 
@@ -40,8 +42,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show health info"
         android:id="@+id/textView"
+        android:textSize="18dp"
         android:layout_below="@+id/toolbar"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
