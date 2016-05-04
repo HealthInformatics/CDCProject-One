@@ -2,6 +2,7 @@ package edu.gatech.cdcproject.demo.BMI;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
@@ -39,12 +41,16 @@ import ca.uhn.fhir.model.dstu2.valueset.HTTPVerbEnum;
 import ca.uhn.fhir.model.dstu2.valueset.ObservationStatusEnum;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.client.IGenericClient;
+import edu.gatech.cdcproject.backend.myApi.model.FoodImage;
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.BuildConfig;
 import edu.gatech.cdcproject.demo.community.CommunityFragment;
 import edu.gatech.cdcproject.demo.foodidentify.confirm_page;
 import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 import edu.gatech.cdcproject.demo.ui.MainActivity;
+import edu.gatech.cdcproject.demo.util.TimeUtils;
+
+import static edu.gatech.cdcproject.demo.network.Api.myApi;
 
 public class BMI extends Fragment
 {
@@ -98,6 +104,7 @@ public class BMI extends Fragment
                 {
                     public void onClick(View v)
                     {
+
                         Calendar cal = Calendar.getInstance();
                         String date=""+cal.getTime();
 
@@ -107,121 +114,95 @@ public class BMI extends Fragment
                         //result_value.put("BMI", Float.toString(BMI_value));
 
                         if(SettingsActivity.ID!=null) {
-                            //SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("BMI").child(date).setValue(result_value);
 
+                            new AsyncTask<String, Integer, String>() {
 
+                                @Override
+                                protected void onPreExecute() {
+                                    wait_bar.setVisibility(View.VISIBLE);
+                                }
 
+                                @Override
+                                protected String doInBackground(String... params) {
+                                    try {
 
 
 
+                                        //SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("BMI").child(date).setValue(result_value);
 
 
 
+                                        FhirContext ctx = FhirContext.forDstu2();
+                                        String serverBase = "http://52.72.172.54:8080/fhir/baseDstu2";//"http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
 
+                                        IGenericClient client = ctx.newRestfulGenericClient(serverBase);
 
+                                        //ca.uhn.fhir.model.dstu2.resource.Bundle results = client
+                                        //        .search()
+                                        //        .forResource(Patient.class)
+                                        //        .where(Patient.FAMILY.matches().value("duck"))
+                                        //        .returnBundle(ca.uhn.fhir.model.dstu2.resource.Bundle.class)
+                                        //       .execute();
+                                        //
+                                        //hTextView.setText("Found " + results.getEntry().size() + " patients named 'duck'");
 
-                        FhirContext ctx = FhirContext.forDstu2();
-                        String serverBase = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
 
-                        IGenericClient client = ctx.newRestfulGenericClient(serverBase);
+                                        // Create an observation object
+                                        Observation observation = new Observation();
+                                        observation.setStatus(ObservationStatusEnum.FINAL);
+                                        observation
+                                                .getCode()
+                                                .addCoding()
+                                                .setSystem("http://loinc.org")
+                                                .setCode("39156-5")
+                                                .setDisplay("Body mass index (BMI) [Ratio]");
+                                        observation.setValue(
+                                                new QuantityDt()
+                                                        .setValue(BMI_value)
+                                                        .setUnit(params[0] + "/" + params[1])
+                                                        .setSystem("http://unitsofmeasure.org")
+                                                        .setCode(params[0] + "/" + params[1]));
 
-                        //ca.uhn.fhir.model.dstu2.resource.Bundle results = client
-                        //        .search()
-                        //        .forResource(Patient.class)
-                        //        .where(Patient.FAMILY.matches().value("duck"))
-                        //        .returnBundle(ca.uhn.fhir.model.dstu2.resource.Bundle.class)
-                        //       .execute();
-                        //
-                        //hTextView.setText("Found " + results.getEntry().size() + " patients named 'duck'");
 
+                                        // The observation refers to the patient using the ID, which is already
+                                        // set to a temporary UUID
+                                        observation.setSubject(new ResourceReferenceDt(SettingsActivity.ID.toString()));
 
-                        // Create an observation object
-                        Observation observation = new Observation();
-                        observation.setStatus(ObservationStatusEnum.FINAL);
-                        observation
-                                .getCode()
-                                .addCoding()
-                                .setSystem("http://loinc.org")
-                                .setCode("39156-5")
-                                .setDisplay("Body mass index (BMI) [Ratio]");
-                        observation.setValue(
-                                new QuantityDt()
-                                        .setValue(BMI_value)
-                                        .setUnit(weight_spinner.getSelectedItem().toString()+"/"+ height_spinner.getSelectedItem().toString())
-                                        .setSystem("http://unitsofmeasure.org")
-                                        .setCode(weight_spinner.getSelectedItem().toString()+"/" + height_spinner.getSelectedItem().toString()));
+                                        // Create a bundle that will be used as a transaction
+                                        ca.uhn.fhir.model.dstu2.resource.Bundle bundle = new ca.uhn.fhir.model.dstu2.resource.Bundle();
+                                        bundle.setType(BundleTypeEnum.TRANSACTION);
 
 
-                        // The observation refers to the patient using the ID, which is already
-                        // set to a temporary UUID
-                        observation.setSubject(new ResourceReferenceDt(SettingsActivity.ID.toString()));
+                                        // Add the observation. This entry is a POST with no header
+                                        // (normal create) meaning that it will be created even if
+                                        // a similar resource already exists.
+                                        bundle.addEntry()
+                                                .setResource(observation)
+                                                .getRequest()
+                                                .setUrl("Observation")
+                                                .setMethod(HTTPVerbEnum.POST);
 
-                        // Create a bundle that will be used as a transaction
-                        ca.uhn.fhir.model.dstu2.resource.Bundle bundle = new ca.uhn.fhir.model.dstu2.resource.Bundle();
-                        bundle.setType(BundleTypeEnum.TRANSACTION);
+                                        // Log the request
+                                        System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(bundle));
 
+                                        // Create a client and post the transaction to the server
+                                        ca.uhn.fhir.model.dstu2.resource.Bundle resp = client.transaction().withBundle(bundle).execute();
 
-                        // Add the observation. This entry is a POST with no header
-                        // (normal create) meaning that it will be created even if
-                        // a similar resource already exists.
-                        bundle.addEntry()
-                                .setResource(observation)
-                                .getRequest()
-                                .setUrl("Observation")
-                                .setMethod(HTTPVerbEnum.POST);
+                                        // Log the response
+                                        System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));
 
-                        // Log the request
-                        System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(bundle));
 
-                        // Create a client and post the transaction to the server
-                        ca.uhn.fhir.model.dstu2.resource.Bundle resp = client.transaction().withBundle(bundle).execute();
 
-                        // Log the response
-                        System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));
+                                    } catch (Exception e) {
+                                    }
+                                    return "Completed";
+                                }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                @Override
+                                protected void onPostExecute(String result) {
+                                    wait_bar.setVisibility(View.GONE);
+                                }
+                            }.execute(weight_spinner.getSelectedItem().toString(),height_spinner.getSelectedItem().toString());
 
 
 
