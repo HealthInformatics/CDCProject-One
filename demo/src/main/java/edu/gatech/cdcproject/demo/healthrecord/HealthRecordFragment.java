@@ -1,10 +1,12 @@
 package edu.gatech.cdcproject.demo.healthrecord;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.JsonReader;
 import android.util.JsonToken;
@@ -14,8 +16,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +35,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import ca.uhn.fhir.context.FhirContext;
 //import ca.uhn.fhir.model.dstu2.resource.Bundle;
@@ -45,6 +58,7 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import edu.gatech.cdcproject.demo.BMI.BMI;
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 
@@ -54,7 +68,8 @@ public class HealthRecordFragment extends Fragment {
     private Button hUpload;
     private TextView hTextView;
     private Spinner myPALevelSpinner;
-    private int isHPLA = 0;
+    private int isHPLA = 1;
+    private EditText myPATime;
     //String[] myPALevel = {"High-level", "Low-level"};
     public String myServerBase = "http://52.72.172.54:8080/fhir/baseDstu2";
 
@@ -66,6 +81,7 @@ public class HealthRecordFragment extends Fragment {
         hTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
         hRecord = (Button) view.findViewById(R.id.get_record);
         hUpload = (Button) view.findViewById(R.id.Upload);
+        myPATime = (EditText) view.findViewById(R.id.editText);
 
         myPALevelSpinner = (Spinner) view.findViewById(R.id.spinner);
 
@@ -82,7 +98,7 @@ public class HealthRecordFragment extends Fragment {
                         if (parent.getItemAtPosition(position) == "High-level Activity")
                             isHPLA = 1;
                         else
-                            isHPLA = 2;
+                            isHPLA = 0;
                     }
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {}
@@ -102,7 +118,23 @@ public class HealthRecordFragment extends Fragment {
         hRecord.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        String dataURL = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/" + SettingsActivity.ID + "?_format=json";
+
+
+                        if(SettingsActivity.ID!=null) {
+                            SettingsActivity.myFirebaseRef.child(SettingsActivity.ID.toString()).addValueEventListener(myVEListenner);
+
+
+                        }else {
+                            //Toast.makeText(getContext(), "Please login in first", Toast.LENGTH_SHORT).show();
+                            Intent login_activity = new Intent(getActivity(), SettingsActivity.class);
+                            startActivity(login_activity);
+                        }
+
+
+
+
+
+                        /*String dataURL = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/" + SettingsActivity.ID + "?_format=json";
                         new AsyncTask<String, Void, String>() {
                             @Override
                             protected String doInBackground(String... dataurls) {
@@ -124,28 +156,53 @@ public class HealthRecordFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                             }
-                        }.execute(dataURL);
+                        }.execute(dataURL);*/
                     }
                 });
 
         hUpload.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        // We're connecting to a DSTU1 compliant server in this example
-                        FhirContext ctx = FhirContext.forDstu2();
+
+                        Calendar cal = Calendar.getInstance();
+                        String date=""+cal.getTime();
+
+                        if(SettingsActivity.ID!=null) {
+                            if(myPATime.getText().toString() == null || isHPLA == 0){
+                                Toast.makeText(getActivity(), "Miss data.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            Map<String,String> result_value=new HashMap<String,String>();
+                            result_value.put("Time",myPATime.getText().toString());
+                            result_value.put("IsHighLevel",""+isHPLA);
+
+                            SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("Physicial Activity").child(date).setValue(result_value);
+
+
+                            Fragment fragment = new HealthRecordFragment();
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
+                        }
+                        else {
+                            //Toast.makeText(getContext(), "Please login in first", Toast.LENGTH_SHORT).show();
+                            Intent login_activity = new Intent(getActivity(), SettingsActivity.class);
+                            startActivity(login_activity);
+                        }
+
+                        /*FhirContext ctx = FhirContext.forDstu2();
                         //String serverBase = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
 
                         IGenericClient client = ctx.newRestfulGenericClient(myServerBase);
 
-                        /*ca.uhn.fhir.model.dstu2.resource.Bundle results = client
-                                .search()
-                                .forResource(Patient.class)
-                                .where(Patient.FAMILY.matches().value("duck"))
-                                .returnBundle(ca.uhn.fhir.model.dstu2.resource.Bundle.class)
-                                .execute();
-
-                        hTextView.setText("Found " + results.getEntry().size() + " patients named 'duck'");*/
-
+                        //ca.uhn.fhir.model.dstu2.resource.Bundle results = client
+                        //        .search()
+                        //        .forResource(Patient.class)
+                        //        .where(Patient.FAMILY.matches().value("duck"))
+                        //        .returnBundle(ca.uhn.fhir.model.dstu2.resource.Bundle.class)
+                        //       .execute();
+                        //
+                        //hTextView.setText("Found " + results.getEntry().size() + " patients named 'duck'");
 
                         // Create a patient object
                         Patient patient = new Patient();
@@ -215,7 +272,10 @@ public class HealthRecordFragment extends Fragment {
                         ca.uhn.fhir.model.dstu2.resource.Bundle resp = client.transaction().withBundle(bundle).execute();
 
                         // Log the response
-                        System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));
+                        System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));*/
+
+
+
 
                     }
                 });
@@ -251,4 +311,33 @@ public class HealthRecordFragment extends Fragment {
         return response.toString();
 
     }
+
+
+    protected ValueEventListener myVEListenner = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            if (snapshot != null) {
+                if (snapshot.hasChild("Physicial Activity")) {
+                    System.out.print("!!!!!!!!!!!!!!!!!!!!!!!!!PAPAPA");
+                    Iterator myI = snapshot.child("Physicial Activity").getChildren().iterator();
+                    String myResult = "";
+                    while(myI.hasNext()){
+                        myResult += myI.next() + "\n";
+                    }
+                    hTextView.setText(myResult);
+                    SettingsActivity.myFirebaseRef.child(SettingsActivity.ID.toString()).removeEventListener(myVEListenner);
+
+                }else{
+                    Toast.makeText(getActivity(), "No Activity History.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else{
+            }
+        }
+        @Override
+        public void onCancelled(FirebaseError error) {
+        }
+    };
+
+
 }

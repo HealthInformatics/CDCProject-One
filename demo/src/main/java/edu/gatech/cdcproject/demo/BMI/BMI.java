@@ -28,6 +28,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
+import ca.uhn.fhir.model.dstu2.composite.ResourceReferenceDt;
+import ca.uhn.fhir.model.dstu2.resource.Observation;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
+import ca.uhn.fhir.model.dstu2.valueset.BundleTypeEnum;
+import ca.uhn.fhir.model.dstu2.valueset.HTTPVerbEnum;
+import ca.uhn.fhir.model.dstu2.valueset.ObservationStatusEnum;
+import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.rest.client.IGenericClient;
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.BuildConfig;
 import edu.gatech.cdcproject.demo.community.CommunityFragment;
@@ -90,13 +101,131 @@ public class BMI extends Fragment
                         Calendar cal = Calendar.getInstance();
                         String date=""+cal.getTime();
 
-                        Map<String,String> result_value=new HashMap<String,String>();
-                        result_value.put("Height",height.getText().toString()+height_spinner.getSelectedItem());
-                        result_value.put("Weight",weight.getText().toString()+weight_spinner.getSelectedItem());
-                        result_value.put("BMI", Float.toString(BMI_value));
+                        //Map<String,String> result_value=new HashMap<String,String>();
+                        //result_value.put("Height",height.getText().toString()+height_spinner.getSelectedItem());
+                        //result_value.put("Weight",weight.getText().toString()+weight_spinner.getSelectedItem());
+                        //result_value.put("BMI", Float.toString(BMI_value));
 
                         if(SettingsActivity.ID!=null) {
-                            SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("BMI").child(date).setValue(result_value);
+                            //SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("BMI").child(date).setValue(result_value);
+
+
+
+
+
+
+
+
+
+
+
+
+                        FhirContext ctx = FhirContext.forDstu2();
+                        String serverBase = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
+
+                        IGenericClient client = ctx.newRestfulGenericClient(serverBase);
+
+                        //ca.uhn.fhir.model.dstu2.resource.Bundle results = client
+                        //        .search()
+                        //        .forResource(Patient.class)
+                        //        .where(Patient.FAMILY.matches().value("duck"))
+                        //        .returnBundle(ca.uhn.fhir.model.dstu2.resource.Bundle.class)
+                        //       .execute();
+                        //
+                        //hTextView.setText("Found " + results.getEntry().size() + " patients named 'duck'");
+
+
+                        // Create an observation object
+                        Observation observation = new Observation();
+                        observation.setStatus(ObservationStatusEnum.FINAL);
+                        observation
+                                .getCode()
+                                .addCoding()
+                                .setSystem("http://loinc.org")
+                                .setCode("39156-5")
+                                .setDisplay("Body mass index (BMI) [Ratio]");
+                        observation.setValue(
+                                new QuantityDt()
+                                        .setValue(BMI_value)
+                                        .setUnit(weight_spinner.getSelectedItem().toString()+"/"+ height_spinner.getSelectedItem().toString())
+                                        .setSystem("http://unitsofmeasure.org")
+                                        .setCode(weight_spinner.getSelectedItem().toString()+"/" + height_spinner.getSelectedItem().toString()));
+
+
+                        // The observation refers to the patient using the ID, which is already
+                        // set to a temporary UUID
+                        observation.setSubject(new ResourceReferenceDt(SettingsActivity.ID.toString()));
+
+                        // Create a bundle that will be used as a transaction
+                        ca.uhn.fhir.model.dstu2.resource.Bundle bundle = new ca.uhn.fhir.model.dstu2.resource.Bundle();
+                        bundle.setType(BundleTypeEnum.TRANSACTION);
+
+
+                        // Add the observation. This entry is a POST with no header
+                        // (normal create) meaning that it will be created even if
+                        // a similar resource already exists.
+                        bundle.addEntry()
+                                .setResource(observation)
+                                .getRequest()
+                                .setUrl("Observation")
+                                .setMethod(HTTPVerbEnum.POST);
+
+                        // Log the request
+                        System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(bundle));
+
+                        // Create a client and post the transaction to the server
+                        ca.uhn.fhir.model.dstu2.resource.Bundle resp = client.transaction().withBundle(bundle).execute();
+
+                        // Log the response
+                        System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                             //设置title，现在是调用的static方法
                             //MainActivity.setToolbar(1);//no need to change title anymore. Refresh page and stay in current page
