@@ -1,6 +1,7 @@
 package edu.gatech.cdcproject.demo.healthrecord;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -24,6 +25,20 @@ import android.widget.Toast;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.jjoe64.graphview.DefaultLabelFormatter;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.ValueDependentColor;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.PointsGraphSeries;
+import com.jjoe64.graphview.series.Series;
+
+
+
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,7 +81,12 @@ import edu.gatech.cdcproject.demo.settings.SettingsActivity;
 public class HealthRecordFragment extends Fragment {
     private Button hRecord;
     private Button hUpload;
-    private TextView hTextView;
+
+    private ArrayList<Integer> activity_result=new ArrayList<Integer>();
+
+    private GraphView line_graph;
+
+    //private TextView hTextView;
     private Spinner myPALevelSpinner;
     private int isHPLA = 1;
     private EditText myPATime;
@@ -77,8 +97,9 @@ public class HealthRecordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_health_record, container, false);
-        hTextView = (TextView)view.findViewById(R.id.return_record);
-        hTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
+
+        line_graph=(GraphView) view.findViewById(R.id.line_graph);
+
         hRecord = (Button) view.findViewById(R.id.get_record);
         hUpload = (Button) view.findViewById(R.id.Upload);
         myPATime = (EditText) view.findViewById(R.id.editText);
@@ -106,12 +127,11 @@ public class HealthRecordFragment extends Fragment {
         );
 
 
-
         if(SettingsActivity.ID != null){
-            hTextView.setText("Hello, User " + SettingsActivity.ID + ". To get your personal health information, please click \"retrive\" button.");
+            //hTextView.setText("Hello, User " + SettingsActivity.ID + ". To get your personal health information, please click \"retrive\" button.");
             hRecord.setClickable(true);
         }else {
-            hTextView.setText("To view personal health information, please log in.");
+            //hTextView.setText("To view personal health information, please log in.");
             hRecord.setClickable(false);
         }
 
@@ -122,6 +142,7 @@ public class HealthRecordFragment extends Fragment {
 
                         if(SettingsActivity.ID!=null) {
                             SettingsActivity.myFirebaseRef.child(SettingsActivity.ID.toString()).addValueEventListener(myVEListenner);
+
 
 
                         }else {
@@ -320,12 +341,15 @@ public class HealthRecordFragment extends Fragment {
                 if (snapshot.hasChild("Physicial Activity")) {
                     System.out.print("!!!!!!!!!!!!!!!!!!!!!!!!!PAPAPA");
                     Iterator myI = snapshot.child("Physicial Activity").getChildren().iterator();
-                    String myResult = "";
+
+
                     while(myI.hasNext()){
-                        myResult += myI.next() + "\n";
+                        String myResult = myI.next().toString();
+                        activity_result.add(  Integer.parseInt(myResult.substring(myResult.indexOf("Time=")+5).split(",")[0]) );
                     }
-                    hTextView.setText(myResult);
+
                     SettingsActivity.myFirebaseRef.child(SettingsActivity.ID.toString()).removeEventListener(myVEListenner);
+                    generateGraph();
 
                 }else{
                     Toast.makeText(getActivity(), "No Activity History.", Toast.LENGTH_SHORT).show();
@@ -338,6 +362,45 @@ public class HealthRecordFragment extends Fragment {
         public void onCancelled(FirebaseError error) {
         }
     };
+
+    private void generateGraph()
+    {
+
+        int size=activity_result.size();
+        if(size>5)
+            size=5;
+
+        line_graph.removeAllSeries();
+
+
+        int max=0;
+        DataPoint[] data = new DataPoint[size];
+        for (int i = 0; i < size; i++) {
+            int x=activity_result.get(activity_result.size()-size+i);
+            if(x>max)
+                max=x;
+
+            data[i] = new DataPoint(i,x);
+        }
+
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(data);
+        line_graph.addSeries(series);
+
+        line_graph.getViewport().setMinY(0);
+        line_graph.getViewport().setMaxY(max);
+        line_graph.getViewport().setYAxisBoundsManual(true);
+
+        line_graph.getViewport().setMinX(0);
+        line_graph.getViewport().setMaxX(size-1);
+        line_graph.getViewport().setXAxisBoundsManual(true);
+
+        series.setColor(Color.BLUE);
+        series.setDrawDataPoints(true);
+        series.setDataPointsRadius(8);
+        series.setThickness(4);
+
+    }
+
 
 
 }
