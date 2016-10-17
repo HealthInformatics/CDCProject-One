@@ -2,15 +2,9 @@ package edu.gatech.cdcproject.demo.healthrecord;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.text.method.ScrollingMovementMethod;
-import android.util.JsonReader;
-import android.util.JsonToken;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,33 +13,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.OnDataPointTapListener;
-import com.jjoe64.graphview.series.PointsGraphSeries;
-import com.jjoe64.graphview.series.Series;
-
-
-
-
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -55,27 +32,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import ca.uhn.fhir.context.FhirContext;
-//import ca.uhn.fhir.model.dstu2.resource.Bundle;
-import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
-import ca.uhn.fhir.model.dstu2.composite.ResourceReferenceDt;
-import ca.uhn.fhir.model.dstu2.resource.Observation;
-import ca.uhn.fhir.model.dstu2.resource.Parameters;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
-import ca.uhn.fhir.model.dstu2.valueset.BundleTypeEnum;
-import ca.uhn.fhir.model.dstu2.valueset.HTTPVerbEnum;
-import ca.uhn.fhir.model.dstu2.valueset.ObservationStatusEnum;
-import ca.uhn.fhir.model.primitive.DateDt;
-import ca.uhn.fhir.model.primitive.IdDt;
-import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.rest.client.IGenericClient;
-import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
-import edu.gatech.cdcproject.demo.BMI.BMI;
 import edu.gatech.cdcproject.demo.R;
 import edu.gatech.cdcproject.demo.settings.SettingsActivity;
+//import ca.uhn.fhir.model.dstu2.resource.Bundle;
 
 
 public class HealthRecordFragment extends Fragment {
@@ -139,21 +99,14 @@ public class HealthRecordFragment extends Fragment {
                 new View.OnClickListener() {
                     public void onClick(View v) {
 
-
                         if(SettingsActivity.ID!=null) {
                             SettingsActivity.myFirebaseRef.child(SettingsActivity.ID.toString()).addValueEventListener(myVEListenner);
-
-
 
                         }else {
                             //Toast.makeText(getContext(), "Please login in first", Toast.LENGTH_SHORT).show();
                             Intent login_activity = new Intent(getActivity(), SettingsActivity.class);
                             startActivity(login_activity);
                         }
-
-
-
-
 
                         /*String dataURL = "http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base/Patient/" + SettingsActivity.ID + "?_format=json";
                         new AsyncTask<String, Void, String>() {
@@ -199,7 +152,6 @@ public class HealthRecordFragment extends Fragment {
                             result_value.put("IsHighLevel",""+isHPLA);
 
                             SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("Physicial Activity").child(date).setValue(result_value);
-
 
                             Fragment fragment = new HealthRecordFragment();
                             FragmentManager fragmentManager = getFragmentManager();
@@ -294,16 +246,10 @@ public class HealthRecordFragment extends Fragment {
 
                         // Log the response
                         System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));*/
-
-
-
-
                     }
                 });
         return view;
     }
-
-
 
     private String sendGet(String url) throws Exception {
 
@@ -330,7 +276,6 @@ public class HealthRecordFragment extends Fragment {
         //print result
         System.out.println(response.toString());
         return response.toString();
-
     }
 
 
@@ -341,7 +286,6 @@ public class HealthRecordFragment extends Fragment {
                 if (snapshot.hasChild("Physicial Activity")) {
                     System.out.print("!!!!!!!!!!!!!!!!!!!!!!!!!PAPAPA");
                     Iterator myI = snapshot.child("Physicial Activity").getChildren().iterator();
-
 
                     while(myI.hasNext()){
                         String myResult = myI.next().toString();
@@ -365,13 +309,11 @@ public class HealthRecordFragment extends Fragment {
 
     private void generateGraph()
     {
-
         int size=activity_result.size();
         if(size>5)
             size=5;
 
         line_graph.removeAllSeries();
-
 
         int max=0;
         DataPoint[] data = new DataPoint[size];
@@ -398,9 +340,5 @@ public class HealthRecordFragment extends Fragment {
         series.setDrawDataPoints(true);
         series.setDataPointsRadius(8);
         series.setThickness(4);
-
     }
-
-
-
 }
