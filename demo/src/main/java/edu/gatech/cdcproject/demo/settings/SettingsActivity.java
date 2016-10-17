@@ -27,8 +27,7 @@ import java.net.URL;
 import edu.gatech.cdcproject.demo.R;
 
 
-
-
+//Log in part which can be moved to Service in the future
 public class SettingsActivity extends AppCompatActivity {
     private Button logInButton;
     public static Firebase myFirebaseRef= new Firebase("https://sizzling-fire-2230.firebaseio.com/");;
@@ -62,13 +61,9 @@ public class SettingsActivity extends AppCompatActivity {
         }
     };
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         if(ID == null){
             setContentView(R.layout.activity_settings);
@@ -79,12 +74,12 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-
-
     @Override
     protected void onStop() {
         super.onStop();
-        if(ID != null)        myFirebaseRef.child(ID+"").removeEventListener(myVEListenner);
+        if(ID != null){
+            myFirebaseRef.child(ID+"").removeEventListener(myVEListenner);
+        }
     }
 
     private void setupUI_2() {
@@ -130,25 +125,12 @@ public class SettingsActivity extends AppCompatActivity {
         }
         else
             healthInfo.setText(personal_info);
-
-
-
-
-
-
-
-
-
-
-
     }
 
     private void setupUI() {
         // Toolbar
         editText_0 = (EditText) findViewById(R.id.usernameText);
         editText_1 = (EditText) findViewById(R.id.passwordText);
-
-
 
         editText_0.setOnFocusChangeListener(
                 new View.OnFocusChangeListener() {
@@ -169,8 +151,6 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
         );
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Settings");
@@ -193,17 +173,11 @@ public class SettingsActivity extends AppCompatActivity {
         //这里log out之后结束，就要求在别的fragment中加入re-layout的功能，比如 onResume（）
     }
 
-
-
     public void myLogin(View v){
         myFirebaseRef.child(editText_0.getText().toString()).addValueEventListener(myVEListenner);
     }
 
-
-
-
     private String sendGet(String url) throws Exception {
-
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -227,9 +201,7 @@ public class SettingsActivity extends AppCompatActivity {
         //print result
         System.out.println(response.toString());
         return response.toString();
-
     }
-
 
     private String parseJsonObject(JSONObject myJo)
     {
@@ -247,23 +219,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
         catch(Exception e)
         {
-
         }
         return "";
     }
 
-
-
-
-
-
-
-
-
-
-
-
-/*
+    /*
     {    "resourceType":"Patient",
             "id":"88",
             "text":{
@@ -283,6 +243,5 @@ public class SettingsActivity extends AppCompatActivity {
                 "state":"GA",
                 "postalCode":"30301"        }    ]}
     */
-
 }
 
