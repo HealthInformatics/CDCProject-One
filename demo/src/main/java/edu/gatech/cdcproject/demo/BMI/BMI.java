@@ -1,9 +1,9 @@
 package edu.gatech.cdcproject.demo.BMI;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,46 +11,28 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.support.v4.app.Fragment;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.dstu2.composite.ResourceReferenceDt;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
 import ca.uhn.fhir.model.dstu2.valueset.BundleTypeEnum;
 import ca.uhn.fhir.model.dstu2.valueset.HTTPVerbEnum;
 import ca.uhn.fhir.model.dstu2.valueset.ObservationStatusEnum;
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.client.IGenericClient;
-import edu.gatech.cdcproject.backend.myApi.model.FoodImage;
 import edu.gatech.cdcproject.demo.R;
-import edu.gatech.cdcproject.demo.BuildConfig;
-import edu.gatech.cdcproject.demo.community.CommunityFragment;
-import edu.gatech.cdcproject.demo.foodidentify.confirm_page;
 import edu.gatech.cdcproject.demo.settings.SettingsActivity;
-import edu.gatech.cdcproject.demo.ui.MainActivity;
-import edu.gatech.cdcproject.demo.util.TimeUtils;
-
-import static edu.gatech.cdcproject.demo.network.Api.myApi;
 
 public class BMI extends Fragment
 {
@@ -125,12 +107,7 @@ public class BMI extends Fragment
                                 @Override
                                 protected String doInBackground(String... params) {
                                     try {
-
-
-
                                         //SettingsActivity.myFirebaseRef.child(SettingsActivity.ID).child("BMI").child(date).setValue(result_value);
-
-
 
                                         FhirContext ctx = FhirContext.forDstu2();
                                         String serverBase = "http://52.72.172.54:8080/fhir/baseDstu2";//"http://polaris.i3l.gatech.edu:8080/gt-fhir-webapp/base";
@@ -191,8 +168,6 @@ public class BMI extends Fragment
                                         // Log the response
                                         System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));
 
-
-
                                     } catch (Exception e) {
                                     }
                                     return "Completed";
@@ -204,10 +179,6 @@ public class BMI extends Fragment
                                 }
                             }.execute(weight_spinner.getSelectedItem().toString(),height_spinner.getSelectedItem().toString());
 
-
-
-
-
                             //设置title，现在是调用的static方法
                             //MainActivity.setToolbar(1);//no need to change title anymore. Refresh page and stay in current page
                             Fragment fragment = new BMI();
@@ -215,7 +186,6 @@ public class BMI extends Fragment
                             fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
                         }
                         else {
-                            //Toast.makeText(getContext(), "Please login in first", Toast.LENGTH_SHORT).show();
                             Intent login_activity = new Intent(getActivity(), SettingsActivity.class);
                             startActivity(login_activity);
                         }
@@ -288,7 +258,6 @@ public class BMI extends Fragment
             Toast.makeText(getActivity(),"Miss data.", Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         if(!isKg)
             f_w=((float)0.453592)*f_w;

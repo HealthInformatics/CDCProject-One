@@ -42,7 +42,7 @@ public class HealthRecordFragment extends Fragment {
     private Button hRecord;
     private Button hUpload;
 
-    private ArrayList<Integer> activity_result=new ArrayList<Integer>();
+    private ArrayList<Integer> activity_result = new ArrayList<Integer>();
 
     private GraphView line_graph;
 
@@ -284,7 +284,6 @@ public class HealthRecordFragment extends Fragment {
         public void onDataChange(DataSnapshot snapshot) {
             if (snapshot != null) {
                 if (snapshot.hasChild("Physicial Activity")) {
-                    System.out.print("!!!!!!!!!!!!!!!!!!!!!!!!!PAPAPA");
                     Iterator myI = snapshot.child("Physicial Activity").getChildren().iterator();
 
                     while(myI.hasNext()){

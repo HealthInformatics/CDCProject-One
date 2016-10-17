@@ -136,7 +136,6 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
                 startActivityForResult(Intent.createChooser(intent, "Select " +
                         "Picture"), REQUEST_CODE_PHOTO);
                 break;
-
         }
     }
 
@@ -206,7 +205,6 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
     }
 
     public void animateFAB(){
-
         if (isFabOpen){
 
             plusFab.startAnimation(rotate_backward);
@@ -256,7 +254,6 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -289,7 +286,6 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -333,7 +329,6 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -342,9 +337,5 @@ public class CommunityFragment extends Fragment implements SwipyRefreshLayout.On
             //handle visibility
             progressDialog.dismiss();
         }
-
     }
-
-
-
 }
