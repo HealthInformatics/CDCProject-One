@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        //为了在main进程中使用网络（禁止是为了防阻塞），或者用线程走HTTP
+        //In order to use Internet connection in UI thread
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -78,14 +78,14 @@ public class MainActivity extends AppCompatActivity {
             refresh=false;
             switchFragment(new FoodIdentifyFragment(), getString(R.string.navdrawer_foodidentify));
         }
-
     }
+
     public static void setRefresh(boolean input)
     {
         refresh=input;
     }
 
-
+    //Request for permission
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Set up NavigationDrawer
     private void setupNavDrawer() {
         // Toolbar
         toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -147,17 +148,16 @@ public class MainActivity extends AppCompatActivity {
         return getResources().getInteger(id);
     }
 
+    //Switch between fragments
     private void onNext(int itemId) {
         if(itemId == getInteger(R.integer.navdrawer_community)) {
             toolbar.setTitle(R.string.navdrawer_community);
             switchFragment(new CommunityFragment(), getString(R.string.navdrawer_community));
         } else if(itemId == getInteger(R.integer.navdrawer_foodidentify)) {
             toolbar.setTitle(R.string.navdrawer_foodidentify);
-            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clickmain");
             switchFragment(new FoodIdentifyFragment(), getString(R.string.navdrawer_foodidentify));
         } else if(itemId == getInteger(R.integer.navdrawer_healthrecord)) {
             toolbar.setTitle(R.string.navdrawer_healthrecord);
-            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clickmain");
             switchFragment(new HealthRecordFragment(), getString(R.string.navdrawer_healthrecord));
         } else if(itemId == getInteger(R.integer.navdrawer_settings)) {
             startActivityWithParentStack(new Intent(this, SettingsActivity.class));
@@ -171,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
         else {
             LOGE(TAG, "Unkown navigation drawer item id. ");
         }
-
     }
 
     private void switchFragment(Fragment frag, String tag) {
@@ -182,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startActivityWithParentStack(Intent intent) {
-
         startActivity(intent);
     }
 }
